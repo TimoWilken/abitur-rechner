@@ -1,4 +1,5 @@
 // Globals {{{
+var _saveState;
 var MIN_VALID_GRADE = 0,
     MAX_VALID_GRADE = 15;
 
@@ -108,9 +109,7 @@ function getGradeNumberId(subjectName, term)  { return `${getGradeId(subjectName
 function getTermCountId(subjectName) { return `${subjectName}-totalterms`; }
 function getPointCountId(subjectName) { return `${subjectName}-totalpoints`; }
 
-function getSaveState() {
-    return document.getElementById('box-savestate').className;
-}
+function getSaveState() { return _saveState; }
 
 function setSaveState(state) {
     // state is one of 'unsaved', 'saved', 'nofile'
@@ -129,7 +128,7 @@ function setSaveState(state) {
         default:
             throw `Invalid save state: ${state}`;
     }
-    document.getElementById('box-savestate').className = state;
+    _saveState = state;
 }
 
 function addClassName(element, className) {
@@ -139,6 +138,7 @@ function addClassName(element, className) {
 function removeClassName(element, className) {
     element.className = element.className.replace(new RegExp(`(?:^|\\s)${className}(?!\\S)`, 'g'), '')
 }
+
 function extrapolateFutureGrades(subjectName) {
     // Future term and exam grades are estimated as the unweighted average of
     // given term and exam grades, enabled or not (there is one average, so

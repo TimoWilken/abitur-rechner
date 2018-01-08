@@ -55,19 +55,6 @@ svg.icon-invalid > path { fill: #f44336; }
 
 #terms-errors.empty { display: none; }
 
-#box-savestate { font-size: 75%; }
-#box-savestate > svg.icon-saved, #box-savestate > svg.icon-unsaved { display: none; }
-
-#box-savestate.nofile { display: none; }
-
-#box-savestate.saved { opacity: 0.38; color: #1b5e20; }
-#box-savestate.saved > svg.icon-saved { display: initial; }
-svg.icon-saved > path { fill: #1b5e20; }
-
-#box-savestate.unsaved { opacity: 0.54; color: #b71c1c; }
-#box-savestate.unsaved > svg.icon-unsaved { display: initial; }
-svg.icon-unsaved > path { fill: #b71c1c; }
-
 .math {
     font-family: "TeX Gyre Termes Math", serif;
 }
