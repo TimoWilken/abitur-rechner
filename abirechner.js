@@ -1,5 +1,4 @@
 // Globals {{{
-var _saveState;
 var MIN_VALID_GRADE = 0,
     MAX_VALID_GRADE = 15;
 
@@ -37,7 +36,7 @@ var REQUIREMENT_GROUPS = {
     'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker([0, 2, 3, 4].includes), description: '' }
 }
 
-var subjects;
+var _saveState, subjects;
 // }}}
 
 // Requirement checking {{{
