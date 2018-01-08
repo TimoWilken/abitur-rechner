@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<head>
+    <title>Abirechner</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="abirechner.css" type="text/css" />
+    <script type="application/javascript" src="abirechner.js"></script>
+
+</head>
+<body onload="startNew();">
+
+<h1>Abiturrechner</h1>
+
+<div id="toolbar">
+    <form action="">
+        <input id="btn-newfile" type="button" value="Neue Datei" onclick="startNew();" />
+
+        <input id="btn-openfile" type="button" value="Datei Öffnen" onclick="document.getElementById('filechooser-open').click(); return false;" />
+        <input id="filechooser-open" type="file" onchange="openFile(this);" />
+
+        <input id="btn-savefile" type="button" value="Datei Speichern" onclick="saveFile();" />
+        <span id="box-savestate" class="nofile">
+            <svg class="icon-saved" title="Alle Änderungen gespeichert" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+            </svg>
+            <svg class="icon-unsaved" title="Änderungen nicht gespeichert" width="24" height="24" viewBox="0 0 18 18">
+                <path d="M.5 16h17L9 1 .5 16zm9.5-2H8v-2h2v2zm0-3H8V7h2v4z"/>
+            </svg>
+        </span>
+    </form>
+</div>
+
+<div id="main">
+
+    <h2>1. Halbjahresnoten</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2" id="hdr-field">Aufgabenfeld</th>
+                <th rowspan="2" id="hdr-subject">Fach</th>
+                <th colspan="4" id="hdr-grades">Halbjahresnoten</th>
+                <th rowspan="2" id="hdr-hjcount">Anzahl der eingebrachten Halbjahre</th>
+                <th rowspan="2" id="hdr-pointsum">Punktsumme der eingebrachten Halbjahre</th>
+            </tr>
+            <tr>
+                <th>11.1</th>
+                <th>11.2</th>
+                <th>12.1</th>
+                <th>12.2</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-grades-terms"></tbody>
+        <tfoot>
+            <tr>
+                <th colspan="6">SUMME</th>
+                <th id="total-terms"></th>
+                <th id="total-points"></th>
+            </tr>
+            <tr>
+                <th colspan="7">ERGEBNIS (<span class="math">E<sub>I</sub> = 40 &#8901; Punktsumme &#8758; 36</span>)</th>
+                <th id="result-1"></th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div id="terms-errors" class="empty">
+        <h3>Fehler</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fächergruppe</th>
+                    <th>Regel</th>
+                    <th>Fehler in den Fächern</th>
+                <tr>
+            </thead>
+            <tbody id="tbody-requirements-terms">
+            </tbody>
+        </table>
+    </div>
+
+    <h2>2. Prüfungsnoten</h2>
+
+    <table id="exam-grades">
+    </table>
+
+    <h2>3. Besondere Lernleistung</h2>
+
+    <h2>4. Gesamtnote</h2>
+
+</div>
+
+<footer>
+    <span id="version">2018-01-07</span>
+    <div id="copyright">&copy; 2018 Timo Wilken</div>
+</footer>
+
+</body>
+
+<!--
+vim:textwidth=0:
+-->
