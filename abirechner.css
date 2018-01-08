@@ -32,6 +32,7 @@ td, th {
     background: none;
     border: none;
     border-bottom: medium solid;
+    text-align: right;
 }
 
 .grade-value::placeholder {
@@ -45,6 +46,10 @@ td, th {
 .grade-checkbox:not(checked) ~ .grade-value.empty { border-bottom-color: #9e9e9e; }
 .grade-checkbox:checked      ~ .grade-value.invalid-input { border-bottom-color: #f44336; }
 .grade-checkbox:not(checked) ~ .grade-value.invalid-input { border-bottom-color: #c9706a; }
+
+.total-terms, .total-points {
+    text-align: center;
+}
 
 .invalid-number-of-terms {
     color: #f44336;
