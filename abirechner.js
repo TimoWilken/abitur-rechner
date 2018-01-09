@@ -259,7 +259,7 @@ function getGradeEnabledChangeHandler(subjectName, term) {
 function clearTRow(trow)   { while (trow.cells.length > 0) trow.deleteCell(0); }
 function clearTBody(tbody) { while (tbody.rows.length > 0) tbody.deleteRow(0); }
 
-function populateTermGradeTable() {
+function populateTermHeaders() {
     var termsHeaderRow = document.getElementById('hdrow-terms');
     clearTRow(termsHeaderRow);
     TERMS.forEach(function (term) {
@@ -268,6 +268,15 @@ function populateTermGradeTable() {
         termsHeaderRow.appendChild(termHeader);
     });
     document.getElementById('hdr-terms-grades').colSpan = TERMS.length;
+
+    var overallCol = document.getElementById('col-terms-terms');
+    overallCol.span = TERMS.length;
+    // width of one column under the <col>
+    overallCol.style.width = `${50 / TERMS.length}%`;
+}
+
+function populateTermGradeTable() {
+    populateTermHeaders();
 
     var tbody = document.getElementById('tbody-grades-terms');
     clearTBody(tbody);

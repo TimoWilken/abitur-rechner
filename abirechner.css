@@ -17,12 +17,20 @@ table {
 
 .grade-cell {
     white-space: nowrap;
+    text-align: center;
 }
 
 td, th {
     padding: 2px;
     border-bottom: thin solid grey;
 }
+
+
+/* leave 50% for grades collectively, set on creation in JS */
+#col-terms-field        { width: 20%; }
+#col-terms-subject      { width: 10%; }
+#col-terms-totalterms   { width: 10%; }
+#col-terms-totalpoints  { width: 10%; }
 
 .grade-value {
     margin: 1px;
