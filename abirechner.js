@@ -273,6 +273,10 @@ function populateTermHeaders() {
     overallCol.span = TERMS.length;
     // width of one column under the <col>
     overallCol.style.width = `${50 / TERMS.length}%`;
+
+    ['lbl-terms-sum', 'lbl-terms-result'].forEach(function (id) {
+        document.getElementById(id).colSpan += TERMS.length;
+    });
 }
 
 function populateTermGradeTable() {
