@@ -309,8 +309,8 @@ function populateTermGradeTable() {
 
         var id = getGradeId(subject, term);
         cell.className = 'grade-cell';
-        cell.appendChild(createGradeCheckbox(subject, term));
-        cell.appendChild(createGradeNumberBox(subject, term));
+        cell.appendChild(createGradeCheckbox(subject, term, grade));
+        cell.appendChild(createGradeNumberBox(subject, term, grade));
     }
 
     var lastField = -1, lastFieldCell;
