@@ -256,7 +256,10 @@ function getGradeEnabledChangeHandler(subjectName, term) {
 // }}}
 
 // Startup and initialisation {{{
-function populateTable() {
+function clearTRow(trow)   { while (trow.cells.length > 0) trow.deleteCell(0); }
+function clearTBody(tbody) { while (tbody.rows.length > 0) tbody.deleteRow(0); }
+
+function populateTermGradeTable() {
     var termsHeaderRow = document.getElementById('hdrow-terms');
     termsHeaderRow.childNodes.forEach(termsHeaderRow.removeChild);
     TERMS.forEach(function (term) {
@@ -267,15 +270,10 @@ function populateTable() {
     document.getElementById('hdr-terms-grades').colSpan = TERMS.length;
 
     var tbody = document.getElementById('tbody-grades-terms');
+    clearTBody(tbody);
 
-    // clear old rows
-    while (tbody.rows.length > 0) {
-        tbody.deleteRow(0);
-    }
-
-    function insertGradeCell(row, subject, term, grade) {
+    function populateGradeCell(cell, subject, term, grade) {
         var id = getGradeId(subject, term);
-        var cell = row.insertCell(-1);
         cell.className = 'grade-cell';
 
         var checkbox = document.createElement('input');
@@ -319,9 +317,10 @@ function populateTable() {
         var nameText = document.createTextNode(name);
         nameCell.appendChild(nameText);
 
-        for (i in TERMS) {
-            insertGradeCell(row, name, TERMS[i], val.termGrades[TERMS[i]]);
-        }
+        TERMS.forEach(function (term) {
+            var cell = row.insertCell(-1);
+            populateGradeCell(cell, name, term, val.termGrades[term]);
+        });
 
         var totalTermsCell = row.insertCell(-1);
         totalTermsCell.className = 'total-terms invalid';
@@ -389,7 +388,7 @@ function startNew() {
         s.examGrades = { written: newGrade(), oral: newGrade() };
     });
 
-    populateTable();
+    populateTermGradeTable();
     setSaveState('nofile');
 }
 
@@ -400,7 +399,7 @@ function openFile(chooser) {
         reader.addEventListener('load', function (e) {
             try {
                 subjects = JSON.parse(e.target.result);
-                populateTable();
+                populateTermGradeTable();
                 setSaveState('saved');
             } catch (e) {
                 alert('Diese Datei konnte nicht gelesen werden:\n' + e);
