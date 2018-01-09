@@ -257,6 +257,15 @@ function getGradeEnabledChangeHandler(subjectName, term) {
 
 // Startup and initialisation {{{
 function populateTable() {
+    var termsHeaderRow = document.getElementById('hdrow-terms');
+    termsHeaderRow.childNodes.forEach(termsHeaderRow.removeChild);
+    TERMS.forEach(function (term) {
+        var termHeader = document.createElement('th');
+        termHeader.textContent = term;
+        termsHeaderRow.appendChild(termHeader);
+    });
+    document.getElementById('hdr-terms-grades').colSpan = TERMS.length;
+
     var tbody = document.getElementById('tbody-grades-terms');
 
     // clear old rows
