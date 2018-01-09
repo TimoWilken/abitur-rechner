@@ -5,11 +5,13 @@ var MIN_VALID_GRADE = 0,
 /* Subject fields
  *
  * The <subject>.field property is an index into this array.
+ *
+ * U+00AD is a soft hyphen.
  */
 var FIELDS = [
     'Sprachlich-literarisch-künstlerisch',
-    'Gesellschaftswissenschaftlich',
-    'Mathematisch-naturwissenschaftlich',
+    'Gesellschafts\u00ADwissenschaftlich',
+    'Mathematisch-naturwissen\u00ADschaftlich',
     'Andere'
 ];
 
