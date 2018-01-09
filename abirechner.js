@@ -282,29 +282,35 @@ function populateTermGradeTable() {
     clearTBody(tbody);
 
     function populateGradeCell(cell, subject, term, grade) {
+        function createGradeCheckbox(subject, term, grade) {
+            var checkbox = document.createElement('input');
+            checkbox.title = `${subject}note im Halbjahr ${term} einbringen?`;
+            checkbox.type = 'checkbox';
+            checkbox.checked = grade.enabled;
+            checkbox.className = 'grade-checkbox';
+            checkbox.id = getGradeEnabledId(subject, term);
+            checkbox.addEventListener('input', getGradeEnabledChangeHandler(subject, term));
+            return checkbox;
+        }
+
+        function createGradeNumberBox(subject, term, grade) {
+            var textbox = document.createElement('input');
+            textbox.title = `${subject}note im Halbjahr ${term} in Punkten (0-15). Falls leer, automatisch bestimmt als Durchschnitt anderer gegebenen Noten.`;
+            textbox.type = 'number';
+            textbox.min = MIN_VALID_GRADE;
+            textbox.max = MAX_VALID_GRADE;
+            textbox.step = 1;
+            textbox.value = (grade.grade == null) ? '' : grade.grade;
+            textbox.className = 'grade-value empty';
+            textbox.id = getGradeNumberId(subject, term);
+            textbox.addEventListener('input', getGradeNumberChangeHandler(subject, term));
+            return textbox;
+        }
+
         var id = getGradeId(subject, term);
         cell.className = 'grade-cell';
-
-        var checkbox = document.createElement('input');
-        checkbox.title = `${subject}note im Halbjahr ${term} einbringen?`;
-        checkbox.type = 'checkbox';
-        checkbox.checked = grade.enabled;
-        checkbox.className = 'grade-checkbox';
-        checkbox.id = getGradeEnabledId(subject, term);
-        checkbox.addEventListener('input', getGradeEnabledChangeHandler(subject, term));
-        cell.appendChild(checkbox);
-
-        var textbox = document.createElement('input');
-        textbox.title = `${subject}note im Halbjahr ${term} in Punkten (0-15). Falls leer, automatisch bestimmt als Durchschnitt anderer gegebenen Noten.`;
-        textbox.type = 'number';
-        textbox.min = MIN_VALID_GRADE;
-        textbox.max = MAX_VALID_GRADE;
-        textbox.step = 1;
-        textbox.value = (grade.grade == null) ? '' : grade.grade;
-        textbox.className = 'grade-value empty';
-        textbox.id = getGradeNumberId(subject, term);
-        textbox.addEventListener('input', getGradeNumberChangeHandler(subject, term));
-        cell.appendChild(textbox);
+        cell.appendChild(createGradeCheckbox(subject, term));
+        cell.appendChild(createGradeNumberBox(subject, term));
     }
 
     var lastField = -1, lastFieldCell;
