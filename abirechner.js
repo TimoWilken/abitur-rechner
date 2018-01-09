@@ -106,6 +106,7 @@ function getGradeId(subjectName, term) { return `${subjectName}-${term}` }
 function getGradeEnabledId(subjectName, term) { return `${getGradeId(subjectName, term)}-enabled`; }
 function getGradeNumberId(subjectName, term)  { return `${getGradeId(subjectName, term)}-grade`; }
 function getTermCountId(subjectName) { return `${subjectName}-totalterms`; }
+function getTermCountTextId(subjectName) { return `${subjectName}-totalterms-text`; }
 function getPointCountId(subjectName) { return `${subjectName}-totalpoints`; }
 
 function getSaveState() { return _saveState; }
@@ -178,7 +179,7 @@ function recalculateTermCount() {
                 termsEnabled++;
             }
         });
-        var countCell = document.getElementById(getTermCountId(subjectName));
+        var countCell = document.getElementById(getTermCountTextId(subjectName));
         countCell.textContent = termsEnabled;
         totalTerms += termsEnabled;
     }
@@ -314,8 +315,15 @@ function populateTable() {
         }
 
         var totalTermsCell = row.insertCell(-1);
-        totalTermsCell.className = 'total-terms';
+        totalTermsCell.className = 'total-terms invalid';
         totalTermsCell.id = getTermCountId(name);
+        var totalTermsText = document.createElement('span');
+        totalTermsText.className = 'total-terms-text invalid';
+        totalTermsText.id = getTermCountTextId(name);
+        totalTermsCell.appendChild(totalTermsText);
+        var invalidIcon = document.createElement('div');
+        invalidIcon.className = 'icon-invalid';
+        totalTermsCell.appendChild(invalidIcon);
 
         var totalPointsCell = row.insertCell(-1);
         totalPointsCell.className = 'total-points';
