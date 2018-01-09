@@ -11,14 +11,12 @@
 <h1>Abiturrechner</h1>
 
 <div id="toolbar">
-    <form action="">
-        <input id="btn-newfile" type="button" value="Neue Datei" onclick="startNew();" />
+    <input id="btn-newfile" type="button" value="Neue Datei" onclick="startNew();" />
 
-        <input id="btn-openfile" type="button" value="Datei Öffnen" onclick="document.getElementById('filechooser-open').click(); return false;" />
-        <input id="filechooser-open" type="file" onchange="openFile(this);" />
+    <input id="btn-openfile" type="button" value="Datei Öffnen" onclick="document.getElementById('filechooser-open').click(); return false;" />
+    <input id="filechooser-open" type="file" onchange="openFile(this);" />
 
-        <input id="btn-savefile" type="button" value="Datei Speichern" onclick="saveFile();" />
-    </form>
+    <input id="btn-savefile" type="button" value="Datei Speichern" onclick="saveFile();" />
 </div>
 
 <div id="main">
@@ -64,7 +62,7 @@
                     <th>Fächergruppe</th>
                     <th>Regel</th>
                     <th>Fehler in den Fächern</th>
-                <tr>
+                </tr>
             </thead>
             <tbody id="tbody-requirements-terms">
             </tbody>
