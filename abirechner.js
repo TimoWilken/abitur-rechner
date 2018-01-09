@@ -60,9 +60,7 @@ function getAllChecker(eachPredicate) {
 
 function getAnyChecker(eachPredicate) {
     // at least one subject must satisfy requirements
-    return function (subjects) {
-        return subjects.some(eachPredicate) ? false : subjects;
-    };
+    return subjects => subjects.some(eachPredicate) ? false : subjects;
 }
 
 function getExclusiveChecker() {
@@ -83,13 +81,8 @@ function unmetRequirements() {
     //  { group: secondFailedGroup, failedSubjects: [...] }, ...]
 
     var subjectsByGroup = {};
-    Object.entries(subjects).forEach(function (entry) {
-        var subject = entry[1];
-        subject.groups.forEach(function (groupName) {
-            if (subjectsByGroup[groupName] == undefined) subjectsByGroup[groupName] = [];
-            subjectsByGroup[groupName].push(subject);
-        });
-    });
+    Object.keys(REQUIREMENT_GROUPS).forEach(name => subjectsByGroup[name] = []);
+    Object.values(subjects).forEach(s => s.groups.forEach(groupName => subjectsByGroup[groupName].push(s)));
 
     return Object.entries(subjectsByGroup).map(function (entry) {
         var group = REQUIREMENT_GROUPS[entry[0]], groupSubjects = entry[1];
