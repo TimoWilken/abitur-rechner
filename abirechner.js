@@ -261,7 +261,7 @@ function clearTBody(tbody) { while (tbody.rows.length > 0) tbody.deleteRow(0); }
 
 function populateTermGradeTable() {
     var termsHeaderRow = document.getElementById('hdrow-terms');
-    termsHeaderRow.childNodes.forEach(termsHeaderRow.removeChild);
+    clearTRow(termsHeaderRow);
     TERMS.forEach(function (term) {
         var termHeader = document.createElement('th');
         termHeader.textContent = term;
