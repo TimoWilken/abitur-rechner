@@ -80,19 +80,53 @@ function unmetRequirements() {
     // [{ group: firstFailedGroup, failedSubjects: [...] },
     //  { group: secondFailedGroup, failedSubjects: [...] }, ...]
 
-    var subjectsByGroup = {};
-    Object.keys(REQUIREMENT_GROUPS).forEach(name => subjectsByGroup[name] = []);
-    Object.values(subjects).forEach(s => s.groups.forEach(groupName => subjectsByGroup[groupName].push(s)));
-
-    return Object.entries(subjectsByGroup).map(function (entry) {
-        var group = REQUIREMENT_GROUPS[entry[0]], groupSubjects = entry[1];
-        var failed = group.predicate(groupSubjects);
-        if (failed) return { group: group, failed: failed };
+    return Object.entries(getSubjectsByGroup()).map(function (entry) {
+        var groupName = entry[0],
+            groupSubjects = entry[1],
+            group = REQUIREMENT_GROUPS[groupName],
+            failed = group.predicate(groupSubjects);
+        if (failed) return { groupName: groupName, group: group, failed: failed };
     }).filter(e => e != undefined);
+}
+
+function populateRulesTables(errors) {
+    var termsErrorsTable = document.getElementById('tbody-requirements-terms');
+    clearTBody(termsErrorsTable);
+
+    if (errors == undefined) errors = unmetRequirements();
+    errors.forEach(function (error) {
+        var errorRow = termsErrorsTable.insertRow(-1);
+        errorRow.insertCell(-1).appendChild(document.createTextNode(error.groupName));
+        errorRow.insertCell(-1).appendChild(document.createTextNode(error.group.description));
+        errorRow.insertCell(-1).appendChild(document.createTextNode(error.failed.map(getSubjectName).join(', ')));
+    });
+
+    if (errors.length > 0) {
+        removeClassName(document.getElementById('terms-errors'), 'empty');
+    } else {
+        addClassName(document.getElementById('terms-errors'), 'empty');
+    }
+}
+
+function updateRequirementIndicators(errors) {
+    if (errors == undefined) errors = unmetRequirements();
 }
 // }}}
 
 // Validation and helper functions {{{
+function getSubjectName(subject) {
+    return Object.entries(subjects)
+        .map(e => (e[1] == subject) ? e[0] : undefined)
+        .filter(e => e != undefined)[0];
+}
+
+function getSubjectsByGroup() {
+    var subjectsByGroup = {};
+    Object.keys(REQUIREMENT_GROUPS).forEach(name => subjectsByGroup[name] = []);
+    Object.values(subjects).forEach(s => s.groups.forEach(groupName => subjectsByGroup[groupName].push(s)));
+    return subjectsByGroup;
+}
+
 function isValidGrade(number) {
     return !isNaN(number) && MIN_VALID_GRADE <= number && number <= MAX_VALID_GRADE;
 }
@@ -244,6 +278,7 @@ function getGradeEnabledChangeHandler(subjectName, term) {
 
         recalculateTermCount();
         recalculatePointCount();
+        populateRulesTables();
 
         setSaveState('unsaved');
     };
@@ -355,6 +390,7 @@ function populateTermGradeTable() {
 
     recalculateTermCount();
     recalculatePointCount();
+    populateRulesTables();
 }
 
 function startNew() {
