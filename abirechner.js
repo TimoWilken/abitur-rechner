@@ -176,24 +176,26 @@ function extrapolateFutureGrades(subjectName) {
     var subject = subjects[subjectName];
     var gradeSum = 0, gradeCount = 0;
 
-    function addGradesToSum(e) {
-        var term = e[0], grade = e[1].grade, enabled = e[1].enabled;
-        if (grade == undefined) return;
-        gradeSum += grade;
+    function addGradesToSum(g) {
+        if (g.grade == undefined) return;
+        gradeSum += g.grade;
         gradeCount++;
     }
 
-    Object.entries(subject.termGrades).forEach(addGradesToSum);
-    Object.entries(subject.examGrades).forEach(addGradesToSum);
+    Object.values(subject.termGrades).forEach(addGradesToSum);
+    Object.values(subject.examGrades).forEach(addGradesToSum);
 
     return (gradeCount == 0) ? 0 : gradeSum / gradeCount;
 }
 
-function recalculateEverything() {
+function recalculateTermGrades() {
     var errors = unmetRequirements();
     recalculateTermCount(errors);
     recalculatePointCount();
     populateRulesTables(errors);
+}
+
+function recalculateExamGrades() {
 }
 // }}}
 
@@ -299,7 +301,7 @@ function getGradeNumberChangeHandler(subjectName, term) {
 function getGradeEnabledChangeHandler(subjectName, term) {
     return function (e) {
         subjects[subjectName].termGrades[term].enabled = e.target.checked;
-        recalculateEverything();
+        recalculateTermGrades();
         setSaveState('unsaved');
     };
 }
@@ -402,7 +404,12 @@ function populateTermGradeTable() {
         recalculateGradePlaceholders(name);
     });
 
-    recalculateEverything();
+    recalculateTermGrades();
+}
+
+function populateExamGradeTable() {
+    var tbody = document.getElementById('tbody-grades-exam');
+    clearTBody(tbody);
 }
 
 function startNew() {
