@@ -132,12 +132,14 @@ function isValidGrade(number) {
     return !isNaN(number) && MIN_VALID_GRADE <= number && number <= MAX_VALID_GRADE;
 }
 
-function getGradeId(subjectName, term) { return `${subjectName}-${term}` }
-function getGradeEnabledId(subjectName, term) { return `${getGradeId(subjectName, term)}-enabled`; }
-function getGradeNumberId(subjectName, term)  { return `${getGradeId(subjectName, term)}-grade`; }
+function getTermGradeId(subjectName, term) { return `${subjectName}-${term}` }
+function getTermGradeEnabledId(subjectName, term) { return `${getTermGradeId(subjectName, term)}-enabled`; }
+function getTermGradeNumberId(subjectName, term)  { return `${getTermGradeId(subjectName, term)}-grade`; }
 function getTermCountId(subjectName) { return `${subjectName}-totalterms`; }
 function getTermCountTextId(subjectName) { return `${getTermCountId(subjectName)}-value`; }
 function getPointCountId(subjectName) { return `${subjectName}-totalpoints`; }
+function getExamGradeEnabledId(subjectName, gradeName) { return `${subjectName}-${gradeName}-enabled`; }
+function getExamGradeNumberId(subjectName, gradeName) { return `${subjectName}-${gradeName}-grade`; }
 
 function getSaveState() { return _saveState; }
 
@@ -203,7 +205,7 @@ function recalculateExamGrades() {
 function recalculateGradePlaceholders(subjectName) {
     var futureGrades = extrapolateFutureGrades(subjectName);
     TERMS.forEach(function (term) {
-        var inputbox = document.getElementById(getGradeNumberId(subjectName, term));
+        var inputbox = document.getElementById(getTermGradeNumberId(subjectName, term));
         inputbox.placeholder = futureGrades;
     });
 }
@@ -274,7 +276,7 @@ function recalculatePointCount() {
     resultCell.textContent = Math.round(totalPoints / totalTerms * 40);
 }
 
-function getGradeNumberChangeHandler(subjectName, term) {
+function getTermGradeNumberChangeHandler(subjectName, term) {
     return function (e) {
         var numString = e.target.value;
         var number = parseFloat(numString);
@@ -298,11 +300,21 @@ function getGradeNumberChangeHandler(subjectName, term) {
     };
 }
 
-function getGradeEnabledChangeHandler(subjectName, term) {
+function getTermGradeEnabledChangeHandler(subjectName, term) {
     return function (e) {
         subjects[subjectName].termGrades[term].enabled = e.target.checked;
         recalculateTermGrades();
         setSaveState('unsaved');
+    };
+}
+
+function getExamGradeNumberChangeHandler(subjectName, gradeName) {
+    return function (e) {
+    };
+}
+
+function getExamGradeEnabledChangeHandler(subjectName, term) {
+    return function (e) {
     };
 }
 // }}}
@@ -330,6 +342,31 @@ function populateTermHeaders() {
     document.getElementById('lbl-terms-result').colSpan = 3 + TERMS.length;
 }
 
+function createGradeCheckbox(subject, description, grade, id, changeHandler) {
+    var checkbox = document.createElement('input');
+    checkbox.title = `${subject}note (${description}) einbringen?`;
+    checkbox.type = 'checkbox';
+    checkbox.checked = grade.enabled;
+    checkbox.className = 'grade-checkbox';
+    checkbox.id = id;
+    checkbox.addEventListener('input', changeHandler);
+    return checkbox;
+}
+
+function createGradeNumberBox(subject, description, grade, id, changeHandler) {
+    var textbox = document.createElement('input');
+    textbox.title = `${subject}note (${description}) in Punkten (0-15). Falls leer, automatisch bestimmt als Durchschnitt anderer gegebenen Noten.`;
+    textbox.type = 'number';
+    textbox.min = MIN_VALID_GRADE;
+    textbox.max = MAX_VALID_GRADE;
+    textbox.step = 1;
+    textbox.value = (grade.grade == null) ? '' : grade.grade;
+    textbox.className = 'grade-value empty';
+    textbox.id = id;
+    textbox.addEventListener('input', changeHandler);
+    return textbox;
+}
+
 function populateTermGradeTable() {
     populateTermHeaders();
 
@@ -337,34 +374,10 @@ function populateTermGradeTable() {
     clearTBody(tbody);
 
     function populateGradeCell(cell, subject, term, grade) {
-        function createGradeCheckbox(subject, term, grade) {
-            var checkbox = document.createElement('input');
-            checkbox.title = `${subject}note im Halbjahr ${term} einbringen?`;
-            checkbox.type = 'checkbox';
-            checkbox.checked = grade.enabled;
-            checkbox.className = 'grade-checkbox';
-            checkbox.id = getGradeEnabledId(subject, term);
-            checkbox.addEventListener('input', getGradeEnabledChangeHandler(subject, term));
-            return checkbox;
-        }
-
-        function createGradeNumberBox(subject, term, grade) {
-            var textbox = document.createElement('input');
-            textbox.title = `${subject}note im Halbjahr ${term} in Punkten (0-15). Falls leer, automatisch bestimmt als Durchschnitt anderer gegebenen Noten.`;
-            textbox.type = 'number';
-            textbox.min = MIN_VALID_GRADE;
-            textbox.max = MAX_VALID_GRADE;
-            textbox.step = 1;
-            textbox.value = (grade.grade == null) ? '' : grade.grade;
-            textbox.className = 'grade-value empty';
-            textbox.id = getGradeNumberId(subject, term);
-            textbox.addEventListener('input', getGradeNumberChangeHandler(subject, term));
-            return textbox;
-        }
-
         cell.className = 'grade-cell';
-        cell.appendChild(createGradeCheckbox(subject, term, grade));
-        cell.appendChild(createGradeNumberBox(subject, term, grade));
+        var description = `Halbjahr ${term}`;
+        cell.appendChild(createGradeCheckbox(subject, description, grade, getTermGradeEnabledId(subject, term), getTermGradeEnabledChangeHandler(subject, term)));
+        cell.appendChild(createGradeNumberBox(subject, description, grade, getTermGradeNumberId(subject, term), getTermGradeNumberChangeHandler(subject, term)));
     }
 
     var lastField = -1, lastFieldCell;
@@ -410,6 +423,33 @@ function populateTermGradeTable() {
 function populateExamGradeTable() {
     var tbody = document.getElementById('tbody-grades-exam');
     clearTBody(tbody);
+
+    function populateExamGradeCell(cell, subjectName, gradeName, grade) {
+        cell.className = 'grade-cell';
+        var description;
+        switch (gradeName) {
+            case 'written':
+                description = 'schriftlich';
+                break;
+            case 'oral':
+                description = 'mündlich';
+                break;
+            default:
+                throw `Unknown exam grade type ${gradeName}`;
+        }
+        cell.appendChild(createGradeCheckbox(subjectName, description, grade, getExamGradeEnabledId(subjectName, gradeName), getExamGradeEnabledChangeHandler(subjectName, gradeName)));
+        cell.appendChild(createGradeNumberBox(subjectName, description, grade, getExamGradeNumberId(subjectName, gradeName), getExamGradeNumberChangeHandler(subjectName, gradeName)));
+    }
+
+    Object.entries(subjects).forEach(function (entry) {
+        var name = entry[0], subject = entry[1];
+        var row = tbody.insertRow(-1);
+        row.insertCell(-1).appendChild(document.createTextNode(name));
+        Object.entries(subject.examGrades).forEach(function (entry) {
+            var gradeName = entry[0], grade = entry[1];
+            populateExamGradeCell(row.insertCell(-1), name, gradeName, grade);
+        });
+    });
 }
 
 function startNew() {
@@ -457,6 +497,7 @@ function startNew() {
     });
 
     populateTermGradeTable();
+    populateExamGradeTable();
     setSaveState('nofile');
 }
 
@@ -468,6 +509,7 @@ function openFile(chooser) {
             try {
                 subjects = JSON.parse(e.target.result);
                 populateTermGradeTable();
+                populateExamGradeTable();
                 setSaveState('saved');
             } catch (e) {
                 alert('Diese Datei konnte nicht gelesen werden:\n' + e);
