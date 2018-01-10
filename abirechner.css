@@ -95,6 +95,14 @@ td, th {
     cursor: help;
 }
 
+/* needs ::after for the -100% to refer to the width of the span, not the parent */
+#total-terms.invalid > span.error-indicator::after,
+.total-terms.invalid > span.error-indicator::after {
+    /* align numbers as if the error indicator wasn't there */
+    margin-right: -100%;
+    content: " ⚠";
+}
+
 #lbl-terms-sum, #lbl-terms-result > .title {
     text-transform: uppercase;
 }

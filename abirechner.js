@@ -136,6 +136,7 @@ function getGradeId(subjectName, term) { return `${subjectName}-${term}` }
 function getGradeEnabledId(subjectName, term) { return `${getGradeId(subjectName, term)}-enabled`; }
 function getGradeNumberId(subjectName, term)  { return `${getGradeId(subjectName, term)}-grade`; }
 function getTermCountId(subjectName) { return `${subjectName}-totalterms`; }
+function getTermCountTextId(subjectName) { return `${getTermCountId(subjectName)}-value`; }
 function getPointCountId(subjectName) { return `${subjectName}-totalpoints`; }
 
 function getSaveState() { return _saveState; }
@@ -211,7 +212,7 @@ function recalculateTermCount(errors) {
 
     function recalculateSubjectTermCount(subjectName) {
         var termsEnabled = Object.values(subjects[subjectName].termGrades).filter(g => g.enabled).length;
-        document.getElementById(getTermCountId(subjectName)).textContent = termsEnabled;
+        document.getElementById(getTermCountTextId(subjectName)).textContent = termsEnabled;
         totalTerms += termsEnabled;
     }
 
@@ -236,10 +237,9 @@ function recalculateTermCount(errors) {
     Object.keys(subjects).forEach(recalculateSubjectTermCount);
     Object.keys(subjects).forEach(assignSubjectErrorStatus);
 
-    var totalTermsCell = document.getElementById('total-terms');
-    totalTermsCell.textContent = totalTerms;
+    document.getElementById('total-terms-value').textContent = totalTerms;
 
-    setIndicatorsOnCell(totalTermsCell, errors.filter(e => e.group.failSum));
+    setIndicatorsOnCell(document.getElementById('total-terms'), errors.filter(e => e.group.failSum));
 }
 
 function recalculatePointCount() {
@@ -268,7 +268,7 @@ function recalculatePointCount() {
 
     var resultCell = document.getElementById('result-1');
     // round half up; formula is E_I = 40 #points / #terms
-    var totalTerms = parseInt(document.getElementById('total-terms').textContent);
+    var totalTerms = parseInt(document.getElementById('total-terms-value').textContent);
     resultCell.textContent = Math.round(totalPoints / totalTerms * 40);
 }
 
@@ -360,7 +360,6 @@ function populateTermGradeTable() {
             return textbox;
         }
 
-        var id = getGradeId(subject, term);
         cell.className = 'grade-cell';
         cell.appendChild(createGradeCheckbox(subject, term, grade));
         cell.appendChild(createGradeNumberBox(subject, term, grade));
@@ -374,8 +373,7 @@ function populateTermGradeTable() {
 
         if (val.field != lastField) {
             lastFieldCell = row.insertCell(0);
-            var fieldText = document.createTextNode(FIELDS[val.field]);
-            lastFieldCell.appendChild(fieldText);
+            lastFieldCell.appendChild(document.createTextNode(FIELDS[val.field]));
             lastField = val.field;
         } else {
             lastFieldCell.rowSpan++;
@@ -385,14 +383,17 @@ function populateTermGradeTable() {
         var nameText = document.createTextNode(name);
         nameCell.appendChild(nameText);
 
-        TERMS.forEach(function (term) {
-            var cell = row.insertCell(-1);
-            populateGradeCell(cell, name, term, val.termGrades[term]);
-        });
+        TERMS.forEach(term => populateGradeCell(row.insertCell(-1), name, term, val.termGrades[term]));
 
         var totalTermsCell = row.insertCell(-1);
         totalTermsCell.className = 'total-terms invalid';
         totalTermsCell.id = getTermCountId(name);
+        var text = document.createElement('span');
+        text.id = getTermCountTextId(name);
+        totalTermsCell.appendChild(text);
+        var error = document.createElement('span');
+        error.className = 'error-indicator';
+        totalTermsCell.appendChild(error);
 
         var totalPointsCell = row.insertCell(-1);
         totalPointsCell.className = 'total-points';
