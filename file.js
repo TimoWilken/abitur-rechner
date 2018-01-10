@@ -4,36 +4,8 @@ function startNew() {
         return;
     }
 
-    subjects = {
-        // format:
-        // FachName: {
-        //      field: (see FIELDS above),
-        //      min: (minimum number of term grades countable),
-        //      max: (maximum number of term grades countable),
-        // }
-
-        // linguistic-literary-artistic
-        Deutsch:        { field: 0, groups: ['Alle', 'Deutsch'] },
-        Englisch:       { field: 0, groups: ['Alle', 'Fremdsprachen'] },
-        Französisch:    { field: 0, groups: ['Alle', 'Fremdsprachen'] },
-        Spanisch:       { field: 0, groups: ['Alle', 'Fremdsprachen'] },
-        Kunst:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
-        Musik:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
-
-        // social sciences
-        Geschichte:     { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften', 'Geschichte'] },
-        Erdkunde:       { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften'] },
-        Ethik:          { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften'] },
-
-        // mathematical-scentific-technical
-        Mathematik:     { field: 2, groups: ['Alle', 'Mathematik'] },
-        Physik:         { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
-        Chemie:         { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
-        Biologie:       { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
-
-        // other
-        Sport:          { field: 3, groups: ['Alle', 'Sport'] }
-    };
+    // deep copy
+    var subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
 
     function newGrade() { return { grade: null, enabled: true }; }
     Object.values(subjects).forEach(function (s) {

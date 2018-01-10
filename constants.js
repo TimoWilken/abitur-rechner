@@ -37,4 +37,28 @@ var REQUIREMENT_GROUPS = {
     'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker([0, 2, 3, 4].includes), description: '' }
 }
 
+var DEFAULT_SUBJECTS = {
+    // linguistic-literary-artistic
+    Deutsch:        { field: 0, groups: ['Alle', 'Deutsch'] },
+    Englisch:       { field: 0, groups: ['Alle', 'Fremdsprachen'] },
+    Französisch:    { field: 0, groups: ['Alle', 'Fremdsprachen'] },
+    Spanisch:       { field: 0, groups: ['Alle', 'Fremdsprachen'] },
+    Kunst:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
+    Musik:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
+
+    // social sciences
+    Geschichte:     { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften', 'Geschichte'] },
+    Erdkunde:       { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften'] },
+    Ethik:          { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften'] },
+
+    // mathematical-scentific-technical
+    Mathematik:     { field: 2, groups: ['Alle', 'Mathematik'] },
+    Physik:         { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
+    Chemie:         { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
+    Biologie:       { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
+
+    // other
+    Sport:          { field: 3, groups: ['Alle', 'Sport'] }
+};
+
 // vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:
