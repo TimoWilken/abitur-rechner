@@ -5,6 +5,10 @@ body {
     font-family: "Noto Sans", "Helvetica", sans-serif;
 }
 
+.empty-message {
+    opacity: 0.38;
+}
+
 #filechooser-open {
     display: none;
 }
@@ -12,23 +16,30 @@ body {
 #terms {
     width: 100%;
     display: flex;
-    flex-flow: row wrap;
-    column-gap: 5%;
+    flex-flow: row wrap-reverse;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
 }
 
 #terms > div {
     margin: 10px;
 }
 
-#terms-grades {
-    max-width: 1000px;
-}
+#terms-errors:not(.empty) + #terms-grades { max-width: 1000px; }
+#terms-errors.empty       + #terms-grades { max-width: 100%; }
 
-#terms-errors {
+#terms-errors:not(.empty) {
     flex: 1;
 }
 
-#terms-errors.empty { display: none; }
+#terms-errors.empty {
+    flex: none;
+    max-width: 300px;
+}
+
+#terms-errors.empty > table { display: none; }
+#terms-errors.empty > .empty-message { display: initial; }
+#terms-errors:not(.empty) > .empty-message { display: none; }
 
 table {
     width: 100%;
