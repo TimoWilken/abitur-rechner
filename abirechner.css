@@ -101,6 +101,27 @@ td, th {
 
 .math {
     font-family: "TeX Gyre Termes Math", "Palatino Linotype", serif;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.operator {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.fraction {
+    margin-left: 2px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.fraction > .numerator {
+    border-bottom: thin solid black;
+}
+
+.fraction > .denominator {
+    border-top: thin solid black;
 }
 
 footer {
