@@ -95,7 +95,7 @@ td, th {
     cursor: help;
 }
 
-#lbl-terms-sum, #lbl-terms-result > span:not(.math) {
+#lbl-terms-sum, #lbl-terms-result > .title {
     text-transform: uppercase;
 }
 
@@ -112,6 +112,7 @@ td, th {
 
 .fraction {
     margin-left: 2px;
+    margin-right: 2px;
     display: inline-block;
     vertical-align: middle;
 }

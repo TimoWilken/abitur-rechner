@@ -267,8 +267,9 @@ function recalculatePointCount() {
     totalPointsCell.textContent = totalPoints;
 
     var resultCell = document.getElementById('result-1');
-    // round half up; formula is E_I = 40 P / 36
-    resultCell.textContent = Math.round(totalPoints / 36 * 40);
+    // round half up; formula is E_I = 40 #points / #terms
+    var totalTerms = parseInt(document.getElementById('total-terms').textContent);
+    resultCell.textContent = Math.round(totalPoints / totalTerms * 40);
 }
 
 function getGradeNumberChangeHandler(subjectName, term) {
