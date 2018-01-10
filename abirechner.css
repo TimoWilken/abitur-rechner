@@ -90,19 +90,10 @@ td, th {
     text-align: center;
 }
 
-.total-terms.invalid > .total-terms-text {
+#total-terms.invalid, .total-terms.invalid {
     color: #f44336;
+    cursor: help;
 }
-
-/* .total-terms.invalid > .icon-invalid { display: inline-block; } */
-
-.icon-invalid {
-    /* display: inline-block; */
-    width: 18;
-    height: 18;
-    background-image: url(data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20d%3D%22M9%201.03c-4.42%200-8%203.58-8%208s3.58%208%208%208%208-3.58%208-8-3.58-8-8-8zM10%2013H8v-2h2v2zm0-3H8V5h2v5z%22%2F%3E%3C%2Fsvg%3E);
-}
-span.icon-invalid > svg > path { fill: #f44336; }
 
 #lbl-terms-sum, #lbl-terms-result > span:not(.math) {
     text-transform: uppercase;

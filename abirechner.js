@@ -20,11 +20,11 @@ var TERMS = ['11.1', '11.2', '12.1', '12.2'];
 
 /* Requirement groups
  *
- * If <requirement>.fail == 'sum', this requirement not being met will
+ * If <requirement>.failSum == true, this requirement not being met will
  * highlight the field showing the overall sum of enabled terms as invalid.
  */
 var REQUIREMENT_GROUPS = {
-    Alle:                        { predicate: getTotalChecker(c => c == 36), fail: 'sum', description: 'Es sind insgesamt 36 Halbjahresergebnisse einzubringen.' },
+    Alle:                        { predicate: getTotalChecker(c => c == 36), failSum: true, description: 'Es sind insgesamt 36 Halbjahresergebnisse einzubringen.' },
     Fremdsprachen:               { predicate: getAnyChecker(c => c == 4), description: 'Mindestens eine Fremd-/Landessprache muss voll eingebracht werden.' },
     Prüfungsfächer:              { predicate: getAllChecker(c => c == 4), description: 'Prüfungsfächer müssen voll eingebracht werden.' },
     Deutsch:                     { predicate: getAllChecker(c => c == 4), description: 'Deutsch muss voll eingebracht werden.' },
@@ -135,7 +135,6 @@ function getGradeId(subjectName, term) { return `${subjectName}-${term}` }
 function getGradeEnabledId(subjectName, term) { return `${getGradeId(subjectName, term)}-enabled`; }
 function getGradeNumberId(subjectName, term)  { return `${getGradeId(subjectName, term)}-grade`; }
 function getTermCountId(subjectName) { return `${subjectName}-totalterms`; }
-function getTermCountTextId(subjectName) { return `${subjectName}-totalterms-text`; }
 function getPointCountId(subjectName) { return `${subjectName}-totalpoints`; }
 
 function getSaveState() { return _saveState; }
@@ -187,6 +186,13 @@ function extrapolateFutureGrades(subjectName) {
 
     return (gradeCount == 0) ? 0 : gradeSum / gradeCount;
 }
+
+function recalculateEverything() {
+    var errors = unmetRequirements();
+    recalculateTermCount(errors);
+    recalculatePointCount();
+    populateRulesTables(errors);
+}
 // }}}
 
 // Editing {{{
@@ -198,25 +204,41 @@ function recalculateGradePlaceholders(subjectName) {
     });
 }
 
-function recalculateTermCount() {
+function recalculateTermCount(errors) {
+    if (errors == undefined) errors = unmetRequirements();
     var totalTerms = 0;
 
     function recalculateSubjectTermCount(subjectName) {
-        var termsEnabled = 0;
-        Object.entries(subjects[subjectName].termGrades).forEach(function (e) {
-            if (e[1].enabled) {
-                termsEnabled++;
-            }
-        });
-        var countCell = document.getElementById(getTermCountTextId(subjectName));
-        countCell.textContent = termsEnabled;
+        var termsEnabled = Object.values(subjects[subjectName].termGrades).filter(g => g.enabled).length;
+        document.getElementById(getTermCountId(subjectName)).textContent = termsEnabled;
         totalTerms += termsEnabled;
     }
 
+    function setIndicatorsOnCell(cell, failures) {
+        if (failures.length == 0) {
+            removeClassName(cell, 'invalid');
+            cell.title = 'keine Fehler';
+        } else {
+            addClassName(cell, 'invalid');
+            // U+2022 is a bullet point
+            cell.title = ['Fehler (siehe Tabelle):']
+                .concat(failures.map(e => e.group.description))
+                .join('\n\u2022 ');
+        }
+    }
+
+    function assignSubjectErrorStatus(subjectName) {
+        setIndicatorsOnCell(document.getElementById(getTermCountId(subjectName)),
+            errors.filter(e => e.failed.map(getSubjectName).includes(subjectName) && !e.group.failSum));
+    }
+
     Object.keys(subjects).forEach(recalculateSubjectTermCount);
+    Object.keys(subjects).forEach(assignSubjectErrorStatus);
 
     var totalTermsCell = document.getElementById('total-terms');
     totalTermsCell.textContent = totalTerms;
+
+    setIndicatorsOnCell(totalTermsCell, errors.filter(e => e.group.failSum));
 }
 
 function recalculatePointCount() {
@@ -275,11 +297,7 @@ function getGradeNumberChangeHandler(subjectName, term) {
 function getGradeEnabledChangeHandler(subjectName, term) {
     return function (e) {
         subjects[subjectName].termGrades[term].enabled = e.target.checked;
-
-        recalculateTermCount();
-        recalculatePointCount();
-        populateRulesTables();
-
+        recalculateEverything();
         setSaveState('unsaved');
     };
 }
@@ -373,13 +391,6 @@ function populateTermGradeTable() {
         var totalTermsCell = row.insertCell(-1);
         totalTermsCell.className = 'total-terms invalid';
         totalTermsCell.id = getTermCountId(name);
-        var totalTermsText = document.createElement('span');
-        totalTermsText.className = 'total-terms-text invalid';
-        totalTermsText.id = getTermCountTextId(name);
-        totalTermsCell.appendChild(totalTermsText);
-        var invalidIcon = document.createElement('div');
-        invalidIcon.className = 'icon-invalid';
-        totalTermsCell.appendChild(invalidIcon);
 
         var totalPointsCell = row.insertCell(-1);
         totalPointsCell.className = 'total-points';
@@ -388,9 +399,7 @@ function populateTermGradeTable() {
         recalculateGradePlaceholders(name);
     });
 
-    recalculateTermCount();
-    recalculatePointCount();
-    populateRulesTables();
+    recalculateEverything();
 }
 
 function startNew() {
