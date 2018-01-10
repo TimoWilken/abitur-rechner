@@ -196,7 +196,7 @@ function createGradeNumberBox(subject, description, grade, id, changeHandler) {
     textbox.max = MAX_VALID_GRADE;
     textbox.step = 1;
     textbox.value = (grade.grade == null) ? '' : grade.grade;
-    textbox.className = 'grade-value empty';
+    textbox.className = 'grade-value' + ((grade.grade == null) ? ' empty' : '');
     textbox.id = id;
     textbox.addEventListener('input', changeHandler);
     return textbox;
