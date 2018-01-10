@@ -54,7 +54,7 @@ table {
 
 td, th {
     padding: 2px;
-    border-bottom: thin solid grey;
+    border-bottom: thin solid #ccc;
 }
 
 /* leave 50% for grades collectively, set on creation in JS */
