@@ -33,7 +33,7 @@ var REQUIREMENT_GROUPS = {
     Sport:                       { predicate: getAllChecker(c => c <= 3), description: 'Höchstens 3 Halbjahre Sport können eingebracht werden.' },
     Naturwissenschaften:         { predicate: getTotalChecker(c => c >= 4), description: 'Mindestens 4 Halbjahre Naturwissenschaften müssen eingebracht werden.' },
     Gesellschaftswissenschaften: { predicate: getTotalChecker(c => c >= 4), description: 'Mindestens 4 Halbjahre Gesellschaftswissenschaften müssen eingebracht werden.' },
-    'Künstlerisches Fach':       { predicate: getTotalChecker(c => c > 3), description: 'Mindestens 3 Halbjahre eines künstlerischen Faches müssen eingebracht werden.' },
+    'Künstlerisches Fach':       { predicate: getTotalChecker(c => c >= 3), description: 'Mindestens 3 Halbjahre eines künstlerischen Faches müssen eingebracht werden.' },
     'Kunst oder Musik':          { predicate: getExclusiveChecker(), description: 'Es kann nur entweder Kunst oder Musik eingebracht werden.' },
     'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker([0, 2, 3, 4].includes), description: '' }
 }
@@ -60,7 +60,7 @@ function getAllChecker(eachPredicate) {
 
 function getAnyChecker(eachPredicate) {
     // at least one subject must satisfy requirements
-    return subjects => subjects.some(eachPredicate) ? false : subjects;
+    return subjects => subjects.map(countEnabled).some(eachPredicate) ? false : subjects;
 }
 
 function getExclusiveChecker() {
