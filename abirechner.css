@@ -11,17 +11,21 @@ body {
 
 #terms {
     width: 100%;
-    overflow: hidden;
+    display: flex;
+    flex-flow: row wrap;
+    column-gap: 5%;
+}
+
+#terms > div {
+    margin: 10px;
 }
 
 #terms-grades {
-    float: left;
-    width: 66%;
+    max-width: 1000px;
 }
 
 #terms-errors {
-    float: left;
-    min-width: 33%;
+    flex: 1;
 }
 
 #terms-errors.empty { display: none; }
