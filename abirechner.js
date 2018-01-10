@@ -98,7 +98,8 @@ function populateRulesTables(errors) {
         var errorRow = termsErrorsTable.insertRow(-1);
         errorRow.insertCell(-1).appendChild(document.createTextNode(error.groupName));
         errorRow.insertCell(-1).appendChild(document.createTextNode(error.group.description));
-        errorRow.insertCell(-1).appendChild(document.createTextNode(error.failed.map(getSubjectName).join(', ')));
+        errorRow.insertCell(-1).appendChild(document.createTextNode(
+            error.group.failSum ? '(alle)' : error.failed.map(getSubjectName).join(', ')));
     });
 
     if (errors.length > 0) {
