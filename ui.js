@@ -147,11 +147,34 @@ function getTermGradeEnabledChangeHandler(subjectName, term) {
 
 function getExamGradeNumberChangeHandler(subjectName, gradeName) {
     return function (e) {
+        console.log('exam grade change handler: ' + subjectName + ' ' + gradeName);
+        var numString = e.target.value;
+        var number = parseFloat(numString);
+        if (isValidGrade(number) || numString == '') {
+            subjects[subjectName].examGrades[gradeName].grade = numString ? number : null;
+
+            recalculateGradePlaceholders();
+            recalculateExamPointCount();
+
+            removeClassName(e.target, 'invalid-input');
+            if (numString == '') {
+                addClassName(e.target, 'empty');
+            } else {
+                removeClassName(e.target, 'empty');
+            }
+
+            setSaveState('unsaved');
+        } else {
+            addClassName(e.target, 'invalid-input');
+        }
     };
 }
 
-function getExamGradeEnabledChangeHandler(subjectName, term) {
+function getExamGradeEnabledChangeHandler(subjectName, gradeName) {
     return function (e) {
+        subjects[subjectName].examGrades[gradeName].enabled = e.target.checked;
+        recalculateExamGrades();
+        setSaveState('unsaved');
     };
 }
 
