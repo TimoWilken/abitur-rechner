@@ -26,6 +26,10 @@ h3 {
     font-weight: 400;
 }
 
+.hdr-errorlist {
+    color: #f44336;
+}
+
 th {
     font-weight: 600;
 }
@@ -40,16 +44,17 @@ input[type="button"] {
     border-radius: 3px;
     padding: 5px 10px;
     margin: 2px 5px;
+    transition: 0.2s ease;
 }
 
 input[type="button"]:hover {
     background: #90caf9;
-    transition: 0.1s ease-in;
+    box-shadow: 1px 1px 3px grey;
 }
 
 input[type="button"]:active {
     background: #64b5f6;
-    transition: 0.1s ease-in;
+    box-shadow: 1px 1px 3px 1px grey;
 }
 
 .empty-message {
@@ -117,8 +122,14 @@ td, th {
     color: inherit;
     background: none;
     border: none;
-    border-bottom: medium solid;
+    border-bottom: 2px solid;
     text-align: right;
+    transition: 0.15s ease;
+}
+
+/* do our own styling for invalid fields */
+.grade-value:invalid {
+    box-shadow: none;
 }
 
 .grade-value::placeholder {
@@ -126,7 +137,6 @@ td, th {
     color: #212121;
 }
 
-.grade-checkbox              ~ .grade-value { transition: 0.15s ease-in; }
 .grade-checkbox:checked      ~ .grade-value { border-bottom-color: #4caf50; }
 .grade-checkbox:not(checked) ~ .grade-value { border-bottom-color: #9e9e9e; }
 .grade-checkbox:checked      ~ .grade-value.empty { border-bottom-color: #03a9f4; }
