@@ -5,7 +5,7 @@ function startNew() {
     }
 
     // deep copy
-    var subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+    subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
 
     function newGrade() { return { grade: null, enabled: true }; }
     Object.values(subjects).forEach(function (s) {
