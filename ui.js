@@ -143,7 +143,6 @@ function getTermGradeEnabledChangeHandler(subjectName, term) {
 
 function getExamGradeNumberChangeHandler(subjectName, gradeName) {
     return function (e) {
-        console.log('exam grade change handler: ' + subjectName + ' ' + gradeName);
         var numString = e.target.value;
         var number = parseFloat(numString);
         if (isValidGrade(number) || numString == '') {
