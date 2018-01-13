@@ -7,6 +7,7 @@
     <script type="application/javascript">
 #include "util.js"
 #include "constants.js"
+#include "ids.js"
 #include "terms.js"
 #include "exams.js"
 #include "ui.js"
@@ -77,7 +78,7 @@
                             <span id="total-terms-value"></span>
                             <span class="error-indicator"></span>
                         </th>
-                        <th id="total-points"></th>
+                        <th id="terms-total-points"></th>
                     </tr>
                     <tr>
                         <th id="lbl-terms-result" colspan="3">
@@ -111,10 +112,15 @@
                 <th>Prüfungsfach</th>
                 <th>Schriftlich</th>
                 <th>Mündlich</th>
+                <th>Punktsumme</th>
             </tr>
         </thead>
         <tbody id="tbody-grades-exam"></tbody>
         <tfoot>
+            <tr>
+                <th colspan="3" class="title">Ergebnis</th>
+                <th id="result-2"></th>
+            </tr>
         </tfoot>
     </table>
 

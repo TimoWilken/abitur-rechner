@@ -3,17 +3,8 @@ function addClassName(element, className) {
 }
 
 function removeClassName(element, className) {
-    element.className = element.className.replace(new RegExp(`(?:^|\\s)${className}(?!\\S)`, 'g'), '')
+    element.className = element.className.replace(new RegExp(`(?:^|\\s)${className}(?!\\S)`, 'g'), '');
 }
-
-function getTermGradeId(subjectName, term) { return `${subjectName}-${term}` }
-function getTermGradeEnabledId(subjectName, term) { return `${getTermGradeId(subjectName, term)}-enabled`; }
-function getTermGradeNumberId(subjectName, term)  { return `${getTermGradeId(subjectName, term)}-grade`; }
-function getTermCountId(subjectName) { return `${subjectName}-totalterms`; }
-function getTermCountTextId(subjectName) { return `${getTermCountId(subjectName)}-value`; }
-function getPointCountId(subjectName) { return `${subjectName}-totalpoints`; }
-function getExamGradeEnabledId(subjectName, gradeName) { return `${subjectName}-${gradeName}-enabled`; }
-function getExamGradeNumberId(subjectName, gradeName) { return `${subjectName}-${gradeName}-grade`; }
 
 function recalculateTermGrades() {
     var errors = unmetTermRequirements();
@@ -27,10 +18,10 @@ function recalculateExamGrades() {
 
 function recalculateGradePlaceholders(subjectName) {
     var futureGrades = extrapolateFutureGrades(subjectName);
-    TERMS.forEach(function (term) {
-        var inputbox = document.getElementById(getTermGradeNumberId(subjectName, term));
-        inputbox.placeholder = futureGrades;
-    });
+    TERMS.forEach(term =>
+        document.getElementById(getTermGradeNumberId(subjectName, term)).placeholder = futureGrades);
+    ['written', 'oral'].forEach(type =>
+        document.getElementById(getExamGradeNumberId(subjectName, type)).placeholder = futureGrades);
 }
 
 function recalculateTermCount(errors) {
@@ -70,23 +61,28 @@ function recalculateTermCount(errors) {
 }
 
 function recalculatePointCount() {
-    var totalPoints = Object.keys(subjects).map(function (subjectName) {
-        var points = Object.values(subjects[subjectName].termGrades)
-            .filter(grade => grade.enabled)
-            .map(grade => (grade.grade != undefined) ? grade.grade : extrapolateFutureGrades(subjectName))
-            .reduce((a, b) => a + b);
-        var pointsCell = document.getElementById(getPointCountId(subjectName));
-        pointsCell.textContent = points;
-        return points;
-    }).reduce((a, b) => a + b);
+    var totalTermPoints = Object.keys(subjects).map(getTotalSubjectTermsPoints)
+        .map(function (entry) {
+            var subjectName = entry[0], points = entry[1];
+            document.getElementById(getTermPointCountId(subjectName)).textContent = points;
+            return points;
+        }).reduce(sum);
 
-    var totalPointsCell = document.getElementById('total-points');
-    totalPointsCell.textContent = totalPoints;
+    document.getElementById('terms-total-points').textContent = totalTermPoints;
 
-    var resultCell = document.getElementById('result-1');
     // round half up; formula is E_I = 40 #points / #terms
     var totalTerms = parseInt(document.getElementById('total-terms-value').textContent);
-    resultCell.textContent = Math.round(totalPoints / totalTerms * 40);
+    document.getElementById('result-1').textContent = Math.round(totalTermPoints / totalTerms * 40);
+
+    var totalExamPoints = Object.keys(subjects).map(getTotalSubjectExamsPoints)
+        .map(function (entry) {
+            var subjectName = entry[0], points = entry[1];
+            document.getElementById(getExamPointCountId(subjectName)).textContent = points;
+            return points;
+        }).reduce(sum);
+
+    var examResultCell = document.getElementById('result-2');
+    //
 }
 
 function populateRulesTables(errors) {
@@ -153,8 +149,8 @@ function getExamGradeNumberChangeHandler(subjectName, gradeName) {
         if (isValidGrade(number) || numString == '') {
             subjects[subjectName].examGrades[gradeName].grade = numString ? number : null;
 
-            recalculateGradePlaceholders();
-            recalculateExamPointCount();
+            recalculateGradePlaceholders(subjectName);
+            recalculatePointCount();
 
             removeClassName(e.target, 'invalid-input');
             if (numString == '') {
@@ -270,12 +266,8 @@ function populateTermGradeTable() {
 
         var totalPointsCell = row.insertCell(-1);
         totalPointsCell.className = 'total-points';
-        totalPointsCell.id = getPointCountId(name);
-
-        recalculateGradePlaceholders(name);
+        totalPointsCell.id = getTermPointCountId(name);
     });
-
-    recalculateTermGrades();
 }
 
 function populateExamGradeTable() {
@@ -307,6 +299,10 @@ function populateExamGradeTable() {
             var gradeName = entry[0], grade = entry[1];
             populateExamGradeCell(row.insertCell(-1), name, gradeName, grade);
         });
+
+        var pointCountCell = row.insertCell(-1);
+        pointCountCell.className = 'total-points';
+        pointCountCell.id = getExamPointCountId(name);
     });
 }
 

@@ -16,6 +16,8 @@ function startNew() {
 
     populateTermGradeTable();
     populateExamGradeTable();
+    Object.keys(subjects).forEach(recalculateGradePlaceholders);
+    recalculateTermGrades();
     setSaveState('nofile');
 }
 
@@ -28,6 +30,8 @@ function openFile(chooser) {
                 subjects = JSON.parse(e.target.result);
                 populateTermGradeTable();
                 populateExamGradeTable();
+                Object.keys(subjects).forEach(recalculateGradePlaceholders);
+                recalculateTermGrades();
                 setSaveState('saved');
             } catch (e) {
                 alert('Diese Datei konnte nicht gelesen werden:\n' + e);

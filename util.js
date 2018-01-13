@@ -91,4 +91,8 @@ function extrapolateFutureGrades(subjectName) {
     return (gradeCount == 0) ? 0 : gradeSum / gradeCount;
 }
 
+function sum(a, b) {
+    return a + b;
+}
+
 // vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:
