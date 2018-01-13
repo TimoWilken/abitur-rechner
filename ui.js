@@ -82,8 +82,7 @@ function recalculatePointCount() {
             return points;
         }).reduce(sum);
 
-    var examResultCell = document.getElementById('result-2');
-    //
+    document.getElementById('result-2').textContent = totalExamPoints;
 }
 
 function populateRulesTables(errors) {
