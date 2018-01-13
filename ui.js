@@ -14,6 +14,7 @@ function recalculateTermGrades() {
 }
 
 function recalculateExamGrades() {
+    recalculatePointCount();
 }
 
 function recalculateGradePlaceholders(subjectName) {
@@ -66,7 +67,7 @@ function recalculatePointCount() {
             var subjectName = entry[0], points = entry[1];
             document.getElementById(getTermPointCountId(subjectName)).textContent = points;
             return points;
-        }).reduce(sum);
+        }).reduce(sum, 0);
 
     document.getElementById('terms-total-points').textContent = totalTermPoints;
 
