@@ -95,4 +95,31 @@ function sum(a, b) {
     return a + b;
 }
 
+function formatTotalGrade(grade) {
+    var roundedGrade = Math.trunc(grade * 10) / 10;
+    return Number(roundedGrade).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+function totalGrade(points) {
+    if (points < 300) {
+        return 'nicht bestanden';
+    } else if (points > 822) {
+        return formatTotalGrade(1.0);
+    } else {
+        return formatTotalGrade(17/3 - points/180);
+    }
+}
+
+function nextGradePoints(points) {
+    if (totalGrade(points) == formatTotalGrade(1.0)) {
+        return 'keine bessere Note erreichbar';
+    }
+    var currentGrade = totalGrade(points),
+        nextPoints = points;
+    while (totalGrade(nextPoints) == currentGrade) {
+        nextPoints++;
+    }
+    return nextPoints;
+}
+
 // vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:

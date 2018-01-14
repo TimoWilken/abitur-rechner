@@ -83,6 +83,11 @@ function recalculatePointCount() {
         }).reduce(sum);
 
     document.getElementById('result-2').textContent = totalExamPoints;
+
+    var totalPoints = totalTermPoints + totalExamPoints;
+    document.getElementById('overall-points').textContent = totalPoints;
+    document.getElementById('overall-grade').textContent = totalGrade(totalPoints);
+    document.getElementById('next-grade-points').textContent = nextGradePoints(totalPoints) - totalPoints;
 }
 
 function populateRulesTables(errors) {

@@ -165,6 +165,14 @@ td, th {
     text-transform: uppercase;
 }
 
+dl {
+    padding: 10px;
+}
+
+dt {
+    font-weight: bold;
+}
+
 .math {
     font-family: "TeX Gyre Termes Math", "Palatino Linotype", serif;
     margin-left: 5px;
