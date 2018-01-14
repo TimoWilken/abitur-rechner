@@ -6,11 +6,7 @@ function startNew() {
 
     // deep copy
     subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
-
-    populateTermGradeTable();
-    populateExamGradeTable();
-    Object.keys(subjects).forEach(recalculateGradePlaceholders);
-    recalculateTermGrades();
+    initialUISetup();
     setSaveState('nofile');
 }
 
@@ -21,10 +17,7 @@ function openFile(chooser) {
         reader.addEventListener('load', function (e) {
             try {
                 subjects = JSON.parse(e.target.result);
-                populateTermGradeTable();
-                populateExamGradeTable();
-                Object.keys(subjects).forEach(recalculateGradePlaceholders);
-                recalculateTermGrades();
+                initialUISetup();
                 setSaveState('saved');
             } catch (e) {
                 alert('Diese Datei konnte nicht gelesen werden:\n' + e);

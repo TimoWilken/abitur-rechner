@@ -1,3 +1,11 @@
+function initialUISetup() {
+    populateTermGradeTable();
+    populateExamGradeTable();
+    Object.keys(subjects).forEach(recalculateGradePlaceholders);
+    recalculateTermGrades();
+    recalculateExamGrades();
+}
+
 function addClassName(element, className) {
     element.className += ' ' + className;
 }
