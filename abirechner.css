@@ -94,7 +94,6 @@ input[type="button"]:active {
 #terms-errors:not(.empty) > .empty-message { display: none; }
 
 table {
-    width: 100%;
     border-spacing: 0;
     border-collapse: separate;
 }
