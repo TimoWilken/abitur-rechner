@@ -37,28 +37,122 @@ var REQUIREMENT_GROUPS = {
     'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker(c => c == 0 || c >= 2), description: 'Werden in einer Fremdsprache oder in einer Naturwissenschaft Leistungen eingebracht, so sind die Ergebnisse aus mindestens zwei Halbjahren anzurechnen.' }
 }
 
-var DEFAULT_SUBJECTS = {
-    // linguistic-literary-artistic
-    Deutsch:        { field: 0, groups: ['Alle', 'Deutsch'] },
-    Englisch:       { field: 0, groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'] },
-    Französisch:    { field: 0, groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'] },
-    Spanisch:       { field: 0, groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'] },
-    Kunst:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
-    Musik:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
+var DEFAULT_SUBJECTS = (function () {
+    function newGrade(enabled) { return { grade: null, enabled: enabled }; }
 
-    // social sciences
-    Geschichte:     { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften', 'Geschichte'] },
-    Erdkunde:       { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften'] },
-    Ethik:          { field: 1, groups: ['Alle', 'Gesellschaftswissenschaften'] },
+    function newTermGrades(enabled) {
+        var termGrades = {};
+        TERMS.forEach(term => termGrades[term] = newGrade(enabled));
+        return termGrades;
+    }
 
-    // mathematical-scentific-technical
-    Mathematik:     { field: 2, groups: ['Alle', 'Mathematik'] },
-    Physik:         { field: 2, groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'] },
-    Chemie:         { field: 2, groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'] },
-    Biologie:       { field: 2, groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'] },
+    function newExamGrades(writtenEnabled, oralEnabled) {
+        return { written: newGrade(writtenEnabled), oral: newGrade(oralEnabled) };
+    }
 
-    // other
-    Sport:          { field: 3, groups: ['Alle', 'Sport'] }
-};
+    return {
+        // linguistic-literary-artistic
+        Deutsch: {
+            field: 0,
+            groups: ['Alle', 'Deutsch'],
+            termGrades: newTermGrades(true),
+            examGrades: newExamGrades(true, false),
+        },
+
+        Englisch: {
+            field: 0,
+            groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'],
+            termGrades: newTermGrades(true),
+            examGrades: newExamGrades(true, false),
+        },
+
+        Französisch: {
+            field: 0,
+            groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        Spanisch: {
+            field: 0,
+            groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        Kunst: {
+            field: 0,
+            groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        Musik: {
+            field: 0,
+            groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        // social sciences
+        Geschichte: {
+            field: 1,
+            groups: ['Alle', 'Gesellschaftswissenschaften', 'Geschichte'],
+            termGrades: newTermGrades(true),
+            examGrades: newExamGrades(false, false),
+        },
+
+        Erdkunde: {
+            field: 1,
+            groups: ['Alle', 'Gesellschaftswissenschaften'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        Ethik: {
+            field: 1,
+            groups: ['Alle', 'Gesellschaftswissenschaften'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        // mathematical-scentific-technical
+        Mathematik: {
+            field: 2,
+            groups: ['Alle', 'Mathematik'],
+            termGrades: newTermGrades(true),
+            examGrades: newExamGrades(true, false),
+        },
+
+        Physik: {
+            field: 2,
+            groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        Chemie: {
+            field: 2,
+            groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        Biologie: {
+            field: 2,
+            groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'],
+            termGrades: newTermGrades(false),
+            examGrades: newExamGrades(false, false),
+        },
+
+        // other
+        Sport: {
+            field: 3,
+            groups: ['Alle', 'Sport'],
+            termGrades: newTermGrades(true),
+            examGrades: newExamGrades(false, false),
+        },
+    }
+})();
 
 // vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:

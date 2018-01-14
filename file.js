@@ -7,13 +7,6 @@ function startNew() {
     // deep copy
     subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
 
-    function newGrade() { return { grade: null, enabled: true }; }
-    Object.values(subjects).forEach(function (s) {
-        s.termGrades = {};
-        TERMS.forEach(term => s.termGrades[term] = newGrade());
-        s.examGrades = { written: newGrade(), oral: newGrade() };
-    });
-
     populateTermGradeTable();
     populateExamGradeTable();
     Object.keys(subjects).forEach(recalculateGradePlaceholders);
