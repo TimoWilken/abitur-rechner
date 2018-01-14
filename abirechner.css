@@ -161,7 +161,7 @@ td, th {
     content: " ⚠";
 }
 
-#lbl-terms-sum, #lbl-terms-result > .title {
+.title {
     text-transform: uppercase;
 }
 
