@@ -115,6 +115,11 @@ td, th {
 #col-terms-totalterms   { width: 10%; }
 #col-terms-totalpoints  { width: 10%; }
 
+#col-exams-subject { width: 30%; }
+#col-exams-written { width: 20%; }
+#col-exams-oral    { width: 20%; }
+#col-exams-total   { width: 30%; }
+
 .grade-value {
     margin: 1px;
     font-size: 125%;
