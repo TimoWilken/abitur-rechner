@@ -4,8 +4,7 @@ function startNew() {
         return;
     }
 
-    // deep copy
-    subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+    subjects = getDefaultSubjects();
     initialUISetup();
     setSaveState('nofile');
 }

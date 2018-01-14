@@ -37,7 +37,9 @@ var REQUIREMENT_GROUPS = {
     'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker(c => c == 0 || c >= 2), description: 'Werden in einer Fremdsprache oder in einer Naturwissenschaft Leistungen eingebracht, so sind die Ergebnisse aus mindestens zwei Halbjahren anzurechnen.' }
 }
 
-var DEFAULT_SUBJECTS = (function () {
+function getDefaultSubjects() {
+    // no need to deep-copy DEFAULT_SUBJECTS, this is faster and safer
+
     function newGrade(enabled) { return { grade: null, enabled: enabled }; }
 
     function newTermGrades(enabled) {
@@ -153,6 +155,6 @@ var DEFAULT_SUBJECTS = (function () {
             examGrades: newExamGrades(false, false),
         },
     }
-})();
+}
 
 // vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:
