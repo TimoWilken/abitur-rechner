@@ -34,15 +34,15 @@ var REQUIREMENT_GROUPS = {
     Gesellschaftswissenschaften: { predicate: getTotalChecker(c => c >= 4), description: 'Mindestens 4 Halbjahre Gesellschaftswissenschaften müssen eingebracht werden.' },
     'Künstlerisches Fach':       { predicate: getTotalChecker(c => c >= 3), description: 'Mindestens 3 Halbjahre eines künstlerischen Faches müssen eingebracht werden.' },
     'Kunst oder Musik':          { predicate: getExclusiveChecker(), description: 'Es kann nur entweder Kunst oder Musik eingebracht werden.' },
-    'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker([0, 2, 3, 4].includes), description: '' }
+    'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker(c => c == 0 || c >= 2), description: 'Werden in einer Fremdsprache oder in einer Naturwissenschaft Leistungen eingebracht, so sind die Ergebnisse aus mindestens zwei Halbjahren anzurechnen.' }
 }
 
 var DEFAULT_SUBJECTS = {
     // linguistic-literary-artistic
     Deutsch:        { field: 0, groups: ['Alle', 'Deutsch'] },
-    Englisch:       { field: 0, groups: ['Alle', 'Fremdsprachen'] },
-    Französisch:    { field: 0, groups: ['Alle', 'Fremdsprachen'] },
-    Spanisch:       { field: 0, groups: ['Alle', 'Fremdsprachen'] },
+    Englisch:       { field: 0, groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'] },
+    Französisch:    { field: 0, groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'] },
+    Spanisch:       { field: 0, groups: ['Alle', 'Fremdsprachen', 'Fremdsprachen und Naturwissenschaften'] },
     Kunst:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
     Musik:          { field: 0, groups: ['Alle', 'Künstlerisches Fach', 'Kunst oder Musik'] },
 
@@ -53,9 +53,9 @@ var DEFAULT_SUBJECTS = {
 
     // mathematical-scentific-technical
     Mathematik:     { field: 2, groups: ['Alle', 'Mathematik'] },
-    Physik:         { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
-    Chemie:         { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
-    Biologie:       { field: 2, groups: ['Alle', 'Naturwissenschaften'] },
+    Physik:         { field: 2, groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'] },
+    Chemie:         { field: 2, groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'] },
+    Biologie:       { field: 2, groups: ['Alle', 'Naturwissenschaften', 'Fremdsprachen und Naturwissenschaften'] },
 
     // other
     Sport:          { field: 3, groups: ['Alle', 'Sport'] }
