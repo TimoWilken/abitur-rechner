@@ -1,5 +1,5 @@
-var MIN_VALID_GRADE = 0,
-    MAX_VALID_GRADE = 15;
+const MIN_VALID_GRADE = 0;
+const MAX_VALID_GRADE = 15;
 
 /* Subject fields
  *
@@ -7,7 +7,7 @@ var MIN_VALID_GRADE = 0,
  *
  * U+00AD is a soft hyphen.
  */
-var FIELDS = [
+const FIELDS = [
     'Sprachlich-literarisch-künstlerisch',
     'Gesellschafts\u00ADwissenschaftlich',
     'Mathematisch-naturwissen\u00ADschaftlich',
@@ -15,14 +15,14 @@ var FIELDS = [
 ];
 
 // Names of all school terms (Halbjahre)
-var TERMS = ['11.1', '11.2', '12.1', '12.2'];
+const TERMS = ['11.1', '11.2', '12.1', '12.2'];
 
 /* Requirement groups
  *
  * If <requirement>.failSum == true, this requirement not being met will
  * highlight the field showing the overall sum of enabled terms as invalid.
  */
-var REQUIREMENT_GROUPS = {
+const REQUIREMENT_GROUPS = {
     Alle:                        { predicate: getTotalChecker(c => c == 36), failSum: true, description: 'Es sind insgesamt 36 Halbjahresergebnisse einzubringen.' },
     Fremdsprachen:               { predicate: getAnyChecker(c => c == 4), description: 'Mindestens eine Fremd-/Landessprache muss voll eingebracht werden.' },
     Prüfungsfächer:              { predicate: getAllChecker(c => c == 4), description: 'Prüfungsfächer müssen voll eingebracht werden.' },
