@@ -3,7 +3,7 @@ function getSubjectTotalExamPoints(examGrades, extrapolatedGrade) {
     var oralGrade = (examGrades.oral.grade != undefined) ? examGrades.oral.grade : extrapolatedGrade;
     if (examGrades.written.enabled) {
         if (examGrades.oral.enabled) {
-            return 3*writtenGrade + oralGrade;
+            return 4 * (2*writtenGrade + oralGrade) / 3;
         } else {
             return 4 * writtenGrade;
         }
