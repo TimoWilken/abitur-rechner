@@ -1,4 +1,4 @@
-class SubjectConfiguration extends Serializable() {
+class SubjectConfiguration extends Watchable(Serializable()) {
 
     constructor(fieldNames) {
         super();
@@ -9,10 +9,12 @@ class SubjectConfiguration extends Serializable() {
 
     addSubject(subject) {
         this.subjects[subject.name] = subject;
+        this._update('subjects');
     }
 
     addRequirement(requirement) {
         this.requirements.push(requirement);
+        this._update('requirements');
     }
 
     _createDefaultRequirements() {

@@ -17,17 +17,17 @@
 #include "app.js"
     </script>
 </head>
-<body onload="App.current = new App();">
+<body onload="App.newFile()">
 
 <h1>Abiturrechner</h1>
 
 <div id="toolbar">
-    <input id="btn-newfile" type="button" value="Neue Datei" onclick="App.current = new App();" />
+    <input id="btn-newfile" type="button" value="Neue Datei" onclick="App.newFile();" />
 
     <input id="btn-openfile" type="button" value="Datei Öffnen" onclick="document.getElementById('filechooser-open').click();" />
-    <input id="filechooser-open" type="file" onchange="App.current = App.openFile(this);" />
+    <input id="filechooser-open" type="file" onchange="App.openFile(this);" />
 
-    <input id="btn-savefile" type="button" value="Datei Speichern" onclick="App.current.saveFile();" />
+    <input id="btn-savefile" type="button" value="Datei Speichern" onclick="App.saveFile();" />
 </div>
 
 <div id="main">
