@@ -77,6 +77,7 @@ class TermGradeTable extends Table {
             let nextRow = this.tbody.insertRow();
             let fieldHeader = nextRow.insertCell();
             fieldHeader.rowSpan = field.subjects.length;
+            fieldHeader.appendChild(document.createTextNode(field.name));
 
             Object.entries(field.subjects).forEach(function ([index, subject]) {
                 this._populateSubjectRow(subject, nextRow);
