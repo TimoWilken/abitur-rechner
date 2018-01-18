@@ -8,7 +8,7 @@
 'use strict';
 #include "util-functions.js"
 #include "serializable.js"
-#include "ids.js"
+#include "watchable.js"
 #include "subjectconfig.js"
 #include "subject.js"
 #include "grades.js"
@@ -17,17 +17,17 @@
 #include "app.js"
     </script>
 </head>
-<body onload="new App();">
+<body onload="App.current = new App();">
 
 <h1>Abiturrechner</h1>
 
 <div id="toolbar">
-    <input id="btn-newfile" type="button" value="Neue Datei" onclick="startNew();" />
+    <input id="btn-newfile" type="button" value="Neue Datei" onclick="App.current = new App();" />
 
-    <input id="btn-openfile" type="button" value="Datei Öffnen" onclick="document.getElementById('filechooser-open').click(); return false;" />
-    <input id="filechooser-open" type="file" onchange="openFile(this);" />
+    <input id="btn-openfile" type="button" value="Datei Öffnen" onclick="document.getElementById('filechooser-open').click();" />
+    <input id="filechooser-open" type="file" onchange="App.current = App.openFile(this);" />
 
-    <input id="btn-savefile" type="button" value="Datei Speichern" onclick="saveFile();" />
+    <input id="btn-savefile" type="button" value="Datei Speichern" onclick="App.current.saveFile();" />
 </div>
 
 <div id="main">
@@ -160,7 +160,7 @@
         Abiturrechner nach §7 der
         <a href="https://www.kmk.org/fileadmin/Dateien/doc/Bildung/Auslandsschulwesen/Abitur/2015_06_11-PO-Deutsches-Intern-Abitur.pdf"><em>Ordnung zur Erlangung der Allgemeinen Hochschulreife an Deutschen Schulen im Ausland: Beschluss der KMK vom 11.06.2015</em></a>.
     </p>
-    <span id="version">2018-01-14</span>
+    <span id="version">2018-01-18</span>
     <div id="copyright">&copy; 2018 Timo Wilken</div>
 </footer>
 

@@ -45,9 +45,10 @@ class RulesTable extends Table {
 
 class TermGradeTable extends Table {
 
-    constructor(subjectFields) {
+    constructor(subjectFields, sumRequirements) {
         super('tbl-terms-grades');
-        this._subjectFields = subjectFields;
+        Object.defineProperty(this, '_subjectFields', { value: subjectFields });
+        Object.defineProperty(this, '_sumRequirements', { value: sumRequirements });
         this.cells = {};
 
         let termsHeaderRow = document.getElementById('hdrow-terms');
@@ -86,34 +87,53 @@ class TermGradeTable extends Table {
                 }
             }.bind(this));
         }.bind(this));
+
+        this._recalculateTermCount();
+        this._recalculatePointCount();
     }
 
     _populateSubjectRow(subject, row) {
         row.insertCell().appendChild(document.createTextNode(subject.name));
         this.cells[subject.name] = {};
-        TermGrades.TERMS.map(term => this.cells[subject.name][term] = new TermGradeCell(row.insertCell(), subject, term));
+        TermGrades.TERMS.map(term => this.cells[subject.name][term] = new GradeCell(row.insertCell(), subject, subject.termGrades[term], `Halbjahr ${term}`,
+            this._recalculateTermCount.bind(this), this._recalculatePointCount.bind(this)));
 
-        let totalTermsCell = row.insertCell();
-        totalTermsCell.className = 'total-terms invalid';
-        totalTermsCell.id = IDs.termCount(subject.name);
-        let totalText = document.createElement('span'),
-            totalError = document.createElement('span');
-        totalText.id = IDs.termCountText(subject.name);
-        totalError.id = IDs.termCountError(subject.name);
-        totalError.className = 'error-indicator';
-        totalTermsCell.appendChild(totalText);
-        totalTermsCell.appendChild(totalError);
+        this.cells[subject.name].totalTerms = Object.assign(row.insertCell(), { className: 'total-terms' });
+        this.cells[subject.name].totalTerms.appendChild(document.createElement('span'));
+        this.cells[subject.name].totalTerms.appendChild(Object.assign(document.createElement('span'), { className: 'error-indicator' }));
 
-        let totalPointsCell = row.insertCell();
-        totalPointsCell.className = 'total-points';
-        totalPointsCell.id = IDs.termPointCount(subject.name);
+        this.cells[subject.name].totalPoints = Object.assign(row.insertCell(), { className: 'total-points' });
+        this.cells[subject.name].totalPoints.appendChild(document.createElement('span'));
+        this.cells[subject.name].totalPoints.appendChild(Object.assign(document.createElement('span'), { className: 'error-indicator' }));
+    }
+
+    _setIndicatorsOnCell(cell, failedReqs) {
+        if (failedReqs.length === 0) {
+            removeClassName(cell, 'invalid');
+            cell.title = 'keine Fehler';
+        } else {
+            addClassName(cell, 'invalid');
+            cell.title = ['Fehler (siehe Tabelle):', ...failedReqs.map(r => r.description)].join('\n\u2022 ');
+        }
     }
 
     _recalculateTermCount() {
         let subjects = [].concat(...this._subjectFields.map(f => f.subjects));
-        let totalTerms = sum(subjects.map(s => s.countEnabledTerms()));
 
-        subjects.forEach(s => undefined);
+        subjects.forEach(s => this.cells[s.name].totalTerms.firstChild.textContent = s.countEnabledTerms());
+        subjects.forEach(s => this._setIndicatorsOnCell(this.cells[s.name].totalTerms,
+            s.requirements.filter(r => r instanceof TermCountRequirement && !r.failSum && r.failed.length > 0)));
+
+        document.getElementById('total-terms-value').textContent = sum(subjects.map(s => s.countEnabledTerms()));
+        this._setIndicatorsOnCell(document.getElementById('total-terms'), this._sumRequirements.filter(r => r.failed.length > 0));
+    }
+
+    _recalculatePointCount() {
+        let subjects = [].concat(...this._subjectFields.map(f => f.subjects));
+
+        subjects.forEach(s => document.getElementById(this.cells[s.name].totalPoints.firstChild.textContent = s.getTotalTermsPoints()));
+        subjects.forEach(s => this._setIndicatorsOnCell(this.cells[s.name].totalPoints,
+            s.requirements.filter(r => r instanceof TermPointsRequirement && !r.failSum && r.failed.length > 0)));
     }
 
 }
@@ -125,52 +145,57 @@ class ExamGradeTable extends Table {
 
 class GradeCell {
 
-    constructor(subject, grade, description, onchange = () => undefined) {
-        this.onchange = onchange;
+    constructor(cellElement, subject, grade, description, onEnabledChange = () => undefined, onNumberChange = () => undefined) {
+        this.onEnabledChange = onEnabledChange;
+        this.onNumberChange = onNumberChange;
         this.subject = subject;
         this.grade = grade;
         this.description = description;
+        cellElement.className = 'grade-cell';
+        this.checkbox = cellElement.appendChild(this._createGradeCheckbox());
+        this.numberbox = cellElement.appendChild(this._createGradeNumberBox());
+        subject.subscribe(this._onSubjectChange.bind(this));
     }
 
-    createGradeCheckbox(id) {
+    _createGradeCheckbox() {
         let checkbox = Object.assign(document.createElement('input'), {
             title: `${this.subject.name} (${this.description}) einbringen?`,
             type: 'checkbox',
             checked: this.grade.enabled,
             className: 'grade-checkbox',
-            id: id,
         });
         checkbox.addEventListener('input', this._onEnabledChange.bind(this));
         return checkbox;
     }
 
-    createGradeNumberBox(id) {
+    _createGradeNumberBox() {
         let numberBox = Object.assign(document.createElement('input'), {
-            title: `${this.subject.name} (${this.description}) in Punkten (0-15). Falls leer, automatisch bestimmt als Durchschnitt anderer gegebenen Noten.`,
+            title: `Note in ${this.subject.name} (${this.description}) in Punkten (0${'\u2013'}15). Falls leer, automatisch bestimmt als Durchschnitt anderer gegebenen Noten.`,
             type: 'number',
             min: Grade.MIN_VALID_GRADE,
             max: Grade.MAX_VALID_GRADE,
             step: 1,
             value: (this.grade.grade == null) ? '' : this.grade.grade,
+            placeholder: this.subject.extrapolateGrade(),
             className: 'grade-value' + ((this.grade.grade == null) ? ' empty' : ''),
-            id: id,
         });
         numberBox.addEventListener('input', this._onNumberChange.bind(this));
         return numberBox;
     }
 
+    _onSubjectChange(subject) {
+        this.numberbox.placeholder = this.subject.extrapolateGrade();
+    }
+
     _onEnabledChange(e) {
         this.grade.enabled = e.target.checked;
-        this.onchange(this);
+        this.onEnabledChange(this);
     }
 
     _onNumberChange(e) {
         let numString = e.target.value, number = parseFloat(numString);
-        if (isValidGrade(number) || numString == '') {
+        if (Grade.isValid(number) || numString == '') {
             this.grade.grade = numString ? number : null;
-
-            recalculateGradePlaceholders(subjectName);
-            recalculatePointCount();
 
             removeClassName(e.target, 'invalid-input');
             if (numString == '') {
@@ -179,23 +204,10 @@ class GradeCell {
                 removeClassName(e.target, 'empty');
             }
 
-            this.onchange(this);
+            this.onNumberChange(this);
         } else {
             addClassName(e.target, 'invalid-input');
         }
-    }
-
-}
-
-
-class TermGradeCell extends GradeCell {
-
-    constructor(cellElement, subject, term, onchange) {
-        super(subject, subject.termGrades[term], `Halbjahr ${term}`, onchange);
-        cellElement.className = 'grade-cell';
-        cellElement.appendChild(this.createGradeCheckbox(IDs.termGradeEnabled(subject.name, term)));
-        cellElement.appendChild(this.createGradeNumberBox(IDs.termGradeNumber(subject.name, term)));
-        Object.freeze(this);
     }
 
 }

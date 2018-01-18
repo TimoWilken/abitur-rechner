@@ -1,4 +1,4 @@
-class Serializable {
+const Serializable = (superclass = Object) => class Serializable extends superclass {
 
     toJSON() {
         let jsonned = {};

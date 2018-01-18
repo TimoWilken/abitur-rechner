@@ -1,4 +1,4 @@
-class Grade extends Serializable {
+class Grade extends Watchable(Serializable()) {
 
     constructor(value = null, enabled = false) {
         super();
@@ -8,12 +8,16 @@ class Grade extends Serializable {
             set(value) {
                 if (value != null && !Grade.isValid(value)) throw `Invalid grade value: ${value}`;
                 this._grade = value;
+                this._update('grade');
             }
         });
 
         Object.defineProperty(this, 'enabled', {
             get() { return this._enabled; },
-            set(value) { this._enabled = !!value; }
+            set(value) {
+                this._enabled = !!value;
+                this._update('enabled');
+            }
         });
 
         this.grade = value;
@@ -38,12 +42,13 @@ class Grade extends Serializable {
 }
 
 
-class GradeCollection extends Serializable {
+class GradeCollection extends Watchable(Serializable()) {
 
     constructor(gradesByKey = {}) {
         super();
         this._keys.forEach(key =>
             this[key] = (gradesByKey[key] === undefined) ? new Grade() : gradesByKey[key]);
+        this._keys.forEach(key => this[key].subscribe(this._update.bind(this)));
     }
 
     countEnabled() {

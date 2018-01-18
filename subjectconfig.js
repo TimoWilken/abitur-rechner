@@ -1,4 +1,4 @@
-class SubjectConfiguration extends Serializable {
+class SubjectConfiguration extends Serializable() {
 
     constructor(fieldNames) {
         super();
@@ -27,7 +27,13 @@ class SubjectConfiguration extends Serializable {
             new TermCountRequirement(
                 'Mindestens eine Fremd-/Landessprache muss voll eingebracht werden.',
                 [this.subjects.Englisch, this.subjects.Französisch, this.subjects.Spanisch],
-                TermCountRequirement.any(c => c === 4)
+                TermCountRequirement.any(c => c === TermGrades.TERMS.length)
+            ),
+
+            new TermCountRequirement(
+                'Höchstens 3 Halbjahre Sport können eingebracht werden.',
+                [this.subjects.Sport],
+                TermCountRequirement.all(c => c <= 3)
             ),
         ].forEach(r => this.addRequirement(r));
     }

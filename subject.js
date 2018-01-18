@@ -1,4 +1,4 @@
-class Subject extends Serializable {
+class Subject extends Watchable(Serializable()) {
 
     constructor(name, field, termGrades, examGrades) {
         super();
@@ -7,12 +7,13 @@ class Subject extends Serializable {
         if (this.field != null) this.field.registerSubject(this);
         this.termGrades = termGrades;
         this.examGrades = examGrades;
-        this._requirements = [];
+        Object.defineProperty(this, '_requirements', { value: [] });
         Object.freeze(this);
     }
 
     registerRequirement(requirement) {
         this._requirements.push(requirement);
+        this._update('requirements');
     }
 
     get requirements() {
@@ -58,12 +59,12 @@ class Subject extends Serializable {
 }
 
 
-class SubjectField extends Serializable {
+class SubjectField extends Serializable() {
 
     constructor(name) {
         super();
         this.name = name;
-        this._subjects = [];
+        Object.defineProperty(this, '_subjects', { value: [] });
     }
 
     registerSubject(subject) {

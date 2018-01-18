@@ -6,12 +6,10 @@ class Requirement {
         this.subjects = subjects;
         this.subjects.forEach(s => s.registerRequirement(this));
         this.failSum = !!failSum;
-        this.check();
     }
 
-    check() {
-        this.failed = this.predicate(this.subjects);
-        return this.failed.length > 0;
+    get failed() {
+        return this.predicate(this.subjects);
     }
 
     static any(predicate) {
@@ -39,7 +37,7 @@ class TermCountRequirement extends Requirement {
     }
 
     static total(predicate) {
-        return subjects => predicate(sum(subjects.map(s => s.countEnabledTerms())));
+        return subjects => predicate(sum(subjects.map(s => s.countEnabledTerms()))) ? [] : subjects;
     }
 
     static exclusive() {
@@ -70,25 +68,6 @@ class ExamPointsRequirement extends Requirement {
 
     static all(predicate) {
         return Requirement.all(s => predicate(s.getTotalExamsPoints()));
-    }
-
-}
-
-
-class RequirementGroup {
-
-    constructor(requirements) {
-        this.requirements = requirements;
-        this._subscribed = [];
-    }
-
-    subscribe(callback) {
-        this._subscribed.push(callback);
-    }
-
-    update() {
-        this.failed = this.requirements.filter(Requirement.check.call).map(r => r.failed);
-        this._subscribed.forEach(callback => callback(this));
     }
 
 }
