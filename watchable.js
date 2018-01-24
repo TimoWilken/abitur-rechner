@@ -14,3 +14,5 @@ const Watchable = (superclass = Object) => class Watchable extends superclass {
     }
 
 }
+
+// vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:
