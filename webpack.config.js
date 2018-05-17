@@ -1,6 +1,8 @@
 var path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 
 module.exports = {
     entry: {
@@ -44,7 +46,13 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
-        })
+        }),
+        // embed all javascript and css inline
+        new HtmlWebpackPlugin({
+            inlineSource: '.(js|css)$',
+            template: 'abirechner.html'
+        }),
+        new HtmlWebpackInlineSourcePlugin()
     ],
 
     /*watchOptions: {
