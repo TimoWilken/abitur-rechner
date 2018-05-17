@@ -35,7 +35,7 @@ const REQUIREMENT_GROUPS = {
     'Künstlerisches Fach':       { predicate: getTotalChecker(c => c >= 3), description: 'Mindestens 3 Halbjahre eines künstlerischen Faches müssen eingebracht werden.' },
     'Kunst oder Musik':          { predicate: getExclusiveChecker(), description: 'Es kann nur entweder Kunst oder Musik eingebracht werden.' },
     'Fremdsprachen und Naturwissenschaften': { predicate: getAllChecker(c => c == 0 || c >= 2), description: 'Werden in einer Fremdsprache oder in einer Naturwissenschaft Leistungen eingebracht, so sind die Ergebnisse aus mindestens zwei Halbjahren anzurechnen.' }
-}
+};
 
 function getDefaultSubjects() {
     // no need to deep-copy DEFAULT_SUBJECTS, this is faster and safer
@@ -154,7 +154,7 @@ function getDefaultSubjects() {
             termGrades: newTermGrades(true),
             examGrades: newExamGrades(false, false),
         },
-    }
+    };
 }
 
 // vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:
