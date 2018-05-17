@@ -68,10 +68,6 @@ class TermGradeTable extends Table {
         document.getElementById('lbl-terms-sum').colSpan = 2 + TermGrades.TERMS.length;
         document.getElementById('lbl-terms-result').colSpan = 3 + TermGrades.TERMS.length;
 
-        this._construct();
-    }
-
-    _construct() {
         this.clearBody();
         this._subjectFields.forEach(function (field) {
 
