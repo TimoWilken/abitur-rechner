@@ -1,6 +1,6 @@
-var path = require("path");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var webpack = require("webpack");
+var path = require('path');
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 
@@ -25,27 +25,27 @@ module.exports = {
             {
                 test: /\.s?css$/,
                 use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: 'css-loader?importLoaders=1!resolve-url-loader!postcss-loader?sourceMap!sass-loader'
+                    fallback: 'style-loader',
+                    use: 'css-loader?importLoaders=1!resolve-url-loader!postcss-loader!sass-loader'
                 })
             }
         ]
     },
 
     output: {
-        path: path.join(__dirname, "./dist"),
+        path: path.join(__dirname, 'dist'),
         filename: '[name].bundle.js',
     },
 
     resolve: {
-        modules: [path.resolve(__dirname, '.'), 'node_modules']
+        modules: [__dirname, 'node_modules']
     },
 
     plugins: [
-        new ExtractTextPlugin("main.css"),
+        new ExtractTextPlugin('main.css'),
         new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
+            $: 'jquery',
+            jQuery: 'jquery'
         }),
         // embed all javascript and css inline
         new HtmlWebpackPlugin({
@@ -53,9 +53,5 @@ module.exports = {
             template: 'abirechner.html'
         }),
         new HtmlWebpackInlineSourcePlugin()
-    ],
-
-    /*watchOptions: {
-        watch: true
-    }*/
+    ]
 };
