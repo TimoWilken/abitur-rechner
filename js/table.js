@@ -1,4 +1,8 @@
-class Table {
+import { addClassName, removeClassName } from 'util/functions.js';
+import { Grade, TermGrades } from 'grades.js';
+import { TermCountRequirement, TermPointsRequirement } from 'requirements.js';
+
+export class Table {
 
     constructor(tableId) {
         this.table = document.getElementById(tableId);
@@ -17,7 +21,7 @@ class Table {
 }
 
 
-class RulesTable extends Table {
+export class RulesTable extends Table {
 
     constructor(tableId, requirements) {
         super(tableId);
@@ -43,7 +47,7 @@ class RulesTable extends Table {
 }
 
 
-class TermGradeTable extends Table {
+export class TermGradeTable extends Table {
 
     constructor(subjectFields, sumRequirements) {
         super('tbl-terms-grades');
@@ -135,11 +139,11 @@ class TermGradeTable extends Table {
 }
 
 
-class ExamGradeTable extends Table {
+export class ExamGradeTable extends Table {
 }
 
 
-class GradeCell {
+export class GradeCell {
 
     constructor(cellElement, subject, grade, description, onEnabledChange = () => undefined, onNumberChange = () => undefined) {
         this.onEnabledChange = onEnabledChange;
@@ -207,5 +211,3 @@ class GradeCell {
     }
 
 }
-
-// vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:

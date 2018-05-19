@@ -1,4 +1,9 @@
-class SubjectConfiguration extends Watchable(Serializable()) {
+import { Serializable, Watchable } from 'util/interfaces.js';
+import { TermCountRequirement } from 'requirements.js';
+import { Subject, SubjectField } from 'subject.js';
+import { Grade, TermGrades, ExamGrades } from 'grades.js';
+
+export default class SubjectConfiguration extends Watchable(Serializable()) {
 
     constructor(fieldNames) {
         super();
@@ -96,5 +101,3 @@ class SubjectConfiguration extends Watchable(Serializable()) {
     }
 
 }
-
-// vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:

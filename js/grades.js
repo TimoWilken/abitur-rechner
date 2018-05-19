@@ -1,4 +1,7 @@
-class Grade extends Watchable(Serializable()) {
+import { sum } from 'util/functions.js';
+import { Serializable, Watchable } from 'util/interfaces.js';
+
+export class Grade extends Watchable(Serializable()) {
 
     constructor(value = null, enabled = false) {
         super();
@@ -42,7 +45,7 @@ class Grade extends Watchable(Serializable()) {
 }
 
 
-class GradeCollection extends Watchable(Serializable()) {
+export class GradeCollection extends Watchable(Serializable()) {
 
     constructor(gradesByKey = {}) {
         super();
@@ -70,7 +73,7 @@ class GradeCollection extends Watchable(Serializable()) {
 }
 
 
-class TermGrades extends GradeCollection {
+export class TermGrades extends GradeCollection {
 
     get _keys() {
         return TermGrades.TERMS;
@@ -87,7 +90,7 @@ class TermGrades extends GradeCollection {
 }
 
 
-class ExamGrades extends GradeCollection {
+export class ExamGrades extends GradeCollection {
 
     get _keys() {
         return ExamGrades.EXAMS;
@@ -117,7 +120,7 @@ class ExamGrades extends GradeCollection {
 
 }
 
-class FinalGrade {
+export class FinalGrade {
 
     constructor(points) {
         this.points = points;
@@ -162,5 +165,3 @@ class FinalGrade {
     }
 
 }
-
-// vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:

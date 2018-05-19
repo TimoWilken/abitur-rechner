@@ -6,7 +6,7 @@ var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 
 module.exports = {
     entry: {
-        app: 'main.js'
+        app: path.join(__dirname, 'js', 'main.js')
     },
 
     module: {
@@ -41,7 +41,7 @@ module.exports = {
     },
 
     resolve: {
-        modules: [__dirname, 'node_modules']
+        modules: [path.join(__dirname, 'js'), 'node_modules']
     },
 
     plugins: [

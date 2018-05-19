@@ -1,4 +1,8 @@
-class Subject extends Watchable(Serializable()) {
+import { sum } from 'util/functions.js';
+import { Serializable, Watchable } from 'util/interfaces.js';
+import { TermGrades, ExamGrades } from 'grades.js';
+
+export class Subject extends Watchable(Serializable()) {
 
     constructor(name, field, termGrades, examGrades) {
         super();
@@ -59,7 +63,7 @@ class Subject extends Watchable(Serializable()) {
 }
 
 
-class SubjectField extends Serializable() {
+export class SubjectField extends Serializable() {
 
     constructor(name) {
         super();
@@ -86,5 +90,3 @@ class SubjectField extends Serializable() {
     }
 
 }
-
-// vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:

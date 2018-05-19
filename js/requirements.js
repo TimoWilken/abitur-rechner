@@ -1,4 +1,6 @@
-class Requirement {
+import { sum } from 'util/functions.js';
+
+export class Requirement {
 
     constructor(description, subjects, predicate, failSum = false) {
         this.description = description;
@@ -26,7 +28,7 @@ class Requirement {
 }
 
 
-class TermCountRequirement extends Requirement {
+export class TermCountRequirement extends Requirement {
 
     static any(predicate) {
         return Requirement.any(s => predicate(s.countEnabledTerms()));
@@ -47,7 +49,7 @@ class TermCountRequirement extends Requirement {
 }
 
 
-class TermPointsRequirement extends Requirement {
+export class TermPointsRequirement extends Requirement {
 
     static any(predicate) {
         return Requirement.any(s => predicate(s.getTotalTermsPoints()));
@@ -60,7 +62,7 @@ class TermPointsRequirement extends Requirement {
 }
 
 
-class ExamPointsRequirement extends Requirement {
+export class ExamPointsRequirement extends Requirement {
 
     static any(predicate) {
         return Requirement.any(s => predicate(s.getTotalExamsPoints()));
@@ -71,5 +73,3 @@ class ExamPointsRequirement extends Requirement {
     }
 
 }
-
-// vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:

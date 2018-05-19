@@ -3,17 +3,15 @@
     <title>Abirechner</title>
     <meta charset="UTF-8" />
 </head>
-<body onload="App.newFile()">
+<body>
 
 <h1>Abiturrechner</h1>
 
 <div id="toolbar">
-    <input id="btn-newfile" type="button" value="Neue Datei" onclick="App.newFile();" />
-
-    <input id="btn-openfile" type="button" value="Datei Öffnen" onclick="document.getElementById('filechooser-open').click();" />
-    <input id="filechooser-open" type="file" onchange="App.openFile(this);" />
-
-    <input id="btn-savefile" type="button" value="Datei Speichern" onclick="App.saveFile();" />
+    <input id="btn-newfile" type="button" value="Neue Datei" />
+    <input id="btn-openfile" type="button" value="Datei Öffnen" />
+    <input id="filechooser-open" type="file" />
+    <input id="btn-savefile" type="button" value="Datei Speichern" />
 </div>
 
 <div id="main">

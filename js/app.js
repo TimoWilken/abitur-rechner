@@ -1,4 +1,7 @@
-class App {
+import SubjectConfiguration from 'subjectconfig.js';
+import { TermGradeTable, ExamGradeTable } from 'table.js';
+
+export default class App {
 
     static newFile(subjectConfiguration = SubjectConfiguration.createDefault()) {
         if (this.saveState === 'unsaved' && !confirm('Diese Datei hat ungespeicherte Änderungen. Trotzdem eine neue Datei anlegen?')) {
@@ -23,11 +26,11 @@ class App {
             set(state) {
                 switch (state) {
                     case 'unsaved':
-                        window.addEventListener('beforeunload', this._warnUnsaved);
+                        window.addEventListener('beforeunload', warnUnsaved);
                         break;
                     case 'saved':
                     case 'nofile':
-                        window.removeEventListener('beforeunload', this._warnUnsaved);
+                        window.removeEventListener('beforeunload', warnUnsaved);
                         break;
                     default:
                         throw `Invalid save state: ${state}`;
@@ -36,12 +39,6 @@ class App {
             },
         });
         this.saveState = 'saved';
-    }
-
-    static _warnUnsaved(e) {
-        let dialogText = 'Nicht gespeicherte Änderungen gehen verloren!';
-        e.returnValue = dialogText;
-        return dialogText;
     }
 
     static openFile(chooser) {
@@ -79,4 +76,8 @@ class App {
 
 }
 
-// vim:foldmethod=marker:foldlevel=0:nowrap:textwidth=0:
+function warnUnsaved(e) {
+    let dialogText = 'Nicht gespeicherte Änderungen gehen verloren!';
+    e.returnValue = dialogText;
+    return dialogText;
+}
